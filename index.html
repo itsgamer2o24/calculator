@@ -6,29 +6,94 @@
     <title>Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background-color: #050505; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; user-select: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
 
-        .bg-mesh { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: -1; background: #050505; overflow: hidden; animation: spinMesh 40s linear infinite; }
-        @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body {
+            background-color: #050505;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+        }
 
-        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; animation: pulseOrb 10s infinite alternate; }
+        /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
+        .bg-mesh {
+            position: fixed;
+            /* Made extra large so corners don't show when spinning */
+            top: -50vh;
+            left: -50vw;
+            width: 200vw;
+            height: 200vh;
+            z-index: -1;
+            background: #050505;
+            overflow: hidden;
+            /* The entire background spins slowly! */
+            animation: spinMesh 40s linear infinite;
+        }
+
+        @keyframes spinMesh {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px); 
+            opacity: 0.6;
+            animation: pulseOrb 10s infinite alternate;
+        }
+
+        /* Premium cinematic colors */
         .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: 20%; left: 20%; }
         .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: 20%; right: 20%; animation-delay: -3s; }
         .orb-3 { width: 45vw; height: 45vw; background: #8a3a0e; top: 40%; left: 40%; animation-delay: -6s; }
-        @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0.8; } }
 
+        @keyframes pulseOrb {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* --- THE GLASS CALCULATOR --- */
         #calc-container {
-            background: rgba(20, 20, 25, 0.4); backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
-            padding: 35px 22px 40px 22px; border-radius: 48px; border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(20, 20, 25, 0.4); 
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            padding: 35px 22px 40px 22px;
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.5);
-            width: 360px; transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease; z-index: 10;
+            width: 360px;
+            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease; 
+            z-index: 10;
         }
 
         #display {
-            width: 100%; height: 110px; color: #ffffff; font-size: 4.8rem; font-weight: 200; text-align: right;
-            padding: 0 10px; margin-bottom: 20px; display: flex; align-items: flex-end; justify-content: flex-end;
-            overflow: hidden; letter-spacing: -2px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); white-space: nowrap; transition: font-size 0.2s ease; 
+            width: 100%;
+            height: 110px;
+            color: #ffffff;
+            font-size: 4.8rem; 
+            font-weight: 200; 
+            text-align: right;
+            padding: 0 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            overflow: hidden;
+            letter-spacing: -2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+            transition: font-size 0.2s ease; 
         }
 
         .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -40,49 +105,92 @@
         .op:active { background: #d98505; box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2); }
         .oval { grid-column: span 2; width: 100%; border-radius: 36px; justify-content: flex-start; padding-left: 28px; }
 
+        /* --- CINEMATIC MUSIC OVERLAY --- */
         #void-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); display: none; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 999;
-        }
-
-        #bg-video {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(15px) brightness(0.4); 
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* Semi-transparent so the spinning colors show through! */
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
         }
 
         .no-click { pointer-events: none; }
-        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; z-index: 2; }
-        #void-text { font-size: 2.2rem; font-weight: 500; text-align: center; width: 90%; opacity: 0; line-height: 1.4; color: #ffffff; display: inline-block; letter-spacing: -0.5px; }
+        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
 
+        #void-text {
+            font-size: 2.2rem;
+            font-weight: 500;
+            text-align: center;
+            width: 90%;
+            opacity: 0;
+            line-height: 1.4;
+            color: #ffffff;
+            display: inline-block;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- MUSIC PLAYER GUI --- */
         #music-gui {
-            position: absolute; bottom: 40px; width: 85%; max-width: 400px;
-            display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 2s ease; z-index: 2;
+            position: absolute;
+            bottom: 40px;
+            width: 85%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 2s ease;
         }
+
         .gui-header { display: flex; align-items: center; gap: 15px; }
+
+        /* The Spinning Record/Album Art */
         .album-art {
-            width: 55px; height: 55px; border-radius: 50%;
-            background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 2px solid rgba(255,255,255,0.1); animation: spinArt 4s linear infinite;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            /* Placeholder gradient for Album Art */
+            background: linear-gradient(135deg, #FF9F0A, #ff3b30);
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.4), inset 0 0 10px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: spinArt 4s linear infinite;
         }
+
+        /* The record hole */
         .album-art::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 12px; height: 12px; background: #000; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px; height: 12px;
+            background: #000;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2);
         }
+
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
 
         .track-details { display: flex; flex-direction: column; }
         .track-title { color: #fff; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
         .track-artist { color: #a0a0ab; font-size: 0.9rem; font-weight: 400; }
 
-        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 6px; }
-        .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a0a0ab; font-weight: 500; }
+        /* The Progress Bar */
+        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 8px; }
         .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.1s linear; }
         
-        #creator-name { position: absolute; top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; z-index: 2; }
+        #matt-name { position: absolute; top: 40px; color: rgba(255, 255, 255, 0.4); font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; }
+
         .red-text { color: #ff3b30 !important; text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); font-weight: 600; }
 
+        /* Animations */
         .zoom-layer { animation: continuousZoom 15s linear forwards; }
         .relapse-entry { animation: blurFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .relapse-exit { animation: blurFadeOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
@@ -106,6 +214,10 @@
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
     </div>
+
+    <audio id="bg-music" preload="auto">
+        <source src="bulong.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="calc-container">
         <div id="display">0</div>
@@ -137,11 +249,7 @@
     </div>
 
     <div id="void-overlay">
-        <video id="bg-media" loop playsinline>
-            <source src="video.mp4" type="video/mp4">
-        </video>
-
-        <div id="creator-name">MADE BY MATT AT JEC</div>
+        <div id="matt-name">MATT</div>
         
         <div id="zoom-wrapper">
             <div id="void-text"></div>
@@ -156,10 +264,6 @@
                 </div>
             </div>
             <div class="progress-container">
-                <div class="time-row">
-                    <span id="current-time">0:00</span>
-                    <span id="remaining-time">-0:00</span>
-                </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
                 </div>
@@ -168,7 +272,7 @@
     </div>
 
     <script>
-        // --- SECURITY WALL ---
+        // --- ANTI-SNOOP SECURITY WALL ---
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') { location.reload(); return; }
@@ -186,11 +290,8 @@
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
         const zoomWrapper = document.getElementById('zoom-wrapper');
-        
-        const bgMedia = document.getElementById('bg-media'); // Video acts as both visual & audio
+        const bgMusic = document.getElementById('bg-music');
         const progressFill = document.getElementById('progress-fill');
-        const currentTimeEl = document.getElementById('current-time');
-        const remainingTimeEl = document.getElementById('remaining-time');
         const musicGui = document.getElementById('music-gui');
 
         let appState = "CALC"; 
@@ -209,20 +310,11 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s < 10 ? '0' : ''}${s}`;
-        }
-
-        // GUI Timestamps reading directly from the video file
-        bgMedia.addEventListener('timeupdate', () => {
-            if (bgMedia.duration) {
-                const current = bgMedia.currentTime;
-                const duration = bgMedia.duration;
-                progressFill.style.width = ((current / duration) * 100) + '%';
-                currentTimeEl.innerText = formatTime(current);
-                remainingTimeEl.innerText = "-" + formatTime(duration - current);
+        // Sync Music GUI Progress Bar
+        bgMusic.addEventListener('timeupdate', () => {
+            if (bgMusic.duration) {
+                const progress = (bgMusic.currentTime / bgMusic.duration) * 100;
+                progressFill.style.width = progress + '%';
             }
         });
 
@@ -261,67 +353,80 @@
             event.stopPropagation();
             if (isTransitioning || display.innerText === "Error") return;
 
-            let userInput = display.innerText.replace(/\s/g, ''); 
+            let userInput = display.innerText;
+            let isValid = false;
 
-            // SECRET TRIGGER
-            if (userInput === "1+1") {
-                isTransitioning = true;
-                display.innerText = "Calculating...";
-                display.style.fontSize = "2.8rem"; 
-                display.style.fontWeight = "300";
-                display.style.color = "#888890";
+            try {
+                if (!userInput || userInput === "0") throw new Error("Empty");
+                eval(userInput);
+                if (['+', '-', '*', '/'].includes(userInput.slice(-1))) throw new Error("Trailing operator");
+                isValid = true; 
+            } catch (e) { isValid = false; }
 
+            if (!isValid) {
+                display.innerText = "Error";
+                display.style.color = "#ff3b30";
+                display.style.fontWeight = "400";
+                display.style.fontSize = "4.8rem";
+                return; 
+            }
+
+            // Fake calculation loading state
+            isTransitioning = true;
+            display.innerText = "Calculating...";
+            display.style.fontSize = "2.8rem"; 
+            display.style.fontWeight = "300";
+            display.style.color = "#888890";
+
+            setTimeout(() => {
+                display.innerText = "Nagkamali ba ako?"; 
+                display.style.fontSize = "2.4rem";
+                display.style.fontWeight = "400";
+                display.style.color = "#ff3b30";
+
+                bgMusic.muted = true;
+                bgMusic.play().then(() => {
+                    bgMusic.pause();
+                    bgMusic.muted = false;
+                    startAudioFade();
+                }).catch(e => {
+                    bgMusic.muted = false;
+                    startAudioFade();
+                });
+
+                function startAudioFade() {
+                    bgMusic.currentTime = 183;
+                    bgMusic.volume = 0;
+                    bgMusic.play();
+
+                    let vol = 0;
+                    const fadeInInterval = setInterval(() => {
+                        if (vol < 1) {
+                            vol += 0.05; 
+                            bgMusic.volume = Math.min(vol, 1);
+                        } else clearInterval(fadeInInterval);
+                    }, 50); 
+                }
+
+                // Push Calculator down and fade out
+                calcContainer.style.transform = 'scale(0.9) translateY(50px)';
+                calcContainer.style.opacity = '0';
+                
                 setTimeout(() => {
-                    display.innerText = "Nagkamali ba ako?"; 
-                    display.style.fontSize = "2.4rem";
-                    display.style.fontWeight = "400";
-                    display.style.color = "#ff3b30";
-
-                    // Play Video/Audio combined
-                    bgMedia.volume = 0;
-                    bgMedia.currentTime = 0; // Starts the reel from the beginning
+                    calcContainer.style.display = 'none';
+                    overlay.style.display = 'flex';
+                    overlay.classList.add('no-click');
                     
-                    bgMedia.play().then(() => {
-                        let vol = 0;
-                        const fadeInInterval = setInterval(() => {
-                            if (vol < 1) {
-                                vol += 0.05; 
-                                bgMedia.volume = Math.min(vol, 1);
-                            } else clearInterval(fadeInInterval);
-                        }, 50); 
-                    }).catch(e => console.log("Autoplay blocked by browser."));
-
-                    calcContainer.style.transform = 'scale(0.9) translateY(50px)';
-                    calcContainer.style.opacity = '0';
+                    // Fade in the Music Player GUI
+                    setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
                     
                     setTimeout(() => {
-                        calcContainer.style.display = 'none';
-                        overlay.style.display = 'flex';
-                        overlay.classList.add('no-click');
-                        
-                        setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
-                        
-                        setTimeout(() => {
-                            appState = "RELAPSING";
-                            runAutomatedLyrics();
-                        }, 3000);
-                    }, 1500); 
+                        appState = "RELAPSING";
+                        runAutomatedLyrics();
+                    }, 3000);
+                }, 1500); 
 
-                }, 2000);
-            } 
-            else {
-                try {
-                    let result = eval(userInput);
-                    if (result === Infinity || isNaN(result)) throw new Error("Math Error");
-                    display.innerText = result;
-                    updateFontSize();
-                } catch (e) {
-                    display.innerText = "Error";
-                    display.style.color = "#ff3b30";
-                    display.style.fontWeight = "400";
-                    display.style.fontSize = "4.8rem";
-                }
-            }
+            }, 2000); 
         }
 
         function runAutomatedLyrics() {
