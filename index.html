@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
 
         body {
-            background-color: #000;
+            /* Cinematic deep background with subtle lighting */
+            background-color: #050505;
+            background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #050505 80%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -25,76 +27,107 @@
             user-select: none;
         }
 
-        /* Upgraded to look exactly like an iPhone screen */
+        /* The Premium Glassmorphism Container */
         #calc-container {
-            background: #000;
-            padding: 25px 20px;
-            border-radius: 40px;
-            box-shadow: 0 0 0 8px #222, 0 20px 50px rgba(0,0,0,0.8); /* Creates a fake phone bezel */
-            width: 340px;
-            transition: opacity 1.5s ease; 
+            background: rgba(30, 30, 35, 0.4);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 35px 22px 40px 22px;
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 40px 80px rgba(0,0,0,0.8), 
+                inset 0 1px 1px rgba(255,255,255,0.15),
+                inset 0 -1px 1px rgba(0,0,0,0.5);
+            width: 360px;
+            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1); 
         }
 
         #display {
             width: 100%;
-            height: 100px;
-            color: #fff;
-            font-size: 4.5rem; /* Huge iOS style text */
-            font-weight: 300;
+            height: 110px;
+            color: #ffffff;
+            font-size: 4.8rem; 
+            font-weight: 200; /* Ultra-light premium font weight */
             text-align: right;
             padding: 0 10px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             align-items: flex-end;
             justify-content: flex-end;
             overflow: hidden;
-            letter-spacing: -2px;
+            letter-spacing: -2.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         .button-layout {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 14px;
         }
 
         button {
             border: none;
-            height: 68px;
-            width: 68px;
-            border-radius: 50%;
+            height: 72px;
+            width: 100%;
+            border-radius: 36px;
             font-size: 1.8rem;
+            font-weight: 400;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Premium translucent buttons */
+            background: rgba(255, 255, 255, 0.08);
+            color: #eeeeee;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* iOS Specific Button Colors */
-        .num { background: #333333; color: #fff; }
-        .num:active { background: #737373; }
+        /* Micro-interaction animations */
+        button:active { 
+            transform: scale(0.92); 
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-        .func { background: #a5a5a5; color: #000; font-size: 1.6rem; font-weight: 400;}
-        .func:active { background: #d9d9d9; }
+        /* Top row function buttons */
+        .func { 
+            background: rgba(255, 255, 255, 0.15); 
+            color: #ffffff; 
+            font-size: 1.5rem; 
+            font-weight: 500;
+        }
+        .func:active { background: rgba(255, 255, 255, 0.3); }
 
-        .op { background: #ff9f0a; color: #fff; font-size: 2.2rem; font-weight: 500;}
-        .op:active { background: #c97c00; }
+        /* Operator buttons (Apple Vibrant Orange) */
+        .op { 
+            background: #FF9F0A; 
+            color: #fff; 
+            font-size: 2.2rem; 
+            font-weight: 500;
+            border: 1px solid rgba(255, 159, 10, 0.5);
+            box-shadow: 0 8px 20px rgba(255, 159, 10, 0.3);
+        }
+        .op:active { 
+            background: #d98505; 
+            box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2);
+        }
 
-        /* The big zero button */
         .oval { 
             grid-column: span 2; 
             width: 100%; 
-            border-radius: 40px; 
+            border-radius: 36px; 
             justify-content: flex-start;
-            padding-left: 25px;
+            padding-left: 28px;
         }
 
-        /* Cinematic Overlay */
+        /* --- OVERLAY & CINEMATICS --- */
         #void-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: black;
+            background: #000;
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -112,14 +145,15 @@
         }
 
         #void-text {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 2.2rem;
+            font-weight: 500;
             text-align: center;
             width: 90%;
             opacity: 0;
-            line-height: 1.3;
-            color: white;
+            line-height: 1.4;
+            color: #ffffff;
             display: inline-block;
+            letter-spacing: -0.5px;
         }
 
         #matt-name {
@@ -127,52 +161,69 @@
             bottom: 25%;
             left: 50%;
             transform: translateX(-50%);
-            color: white;
+            color: rgba(255, 255, 255, 0.5);
             opacity: 0; 
-            font-size: 1.2rem;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
         }
 
-        .name-fade-in { animation: mattFade 1s ease forwards; }
+        .name-fade-in { animation: mattFade 2s ease forwards; }
 
         @keyframes mattFade {
-            0% { opacity: 0; }
-            100% { opacity: 0.5; }
+            0% { opacity: 0; filter: blur(10px); }
+            100% { opacity: 1; filter: blur(0px); }
         }
 
-        .red-text { color: #ff4d4d !important; text-shadow: 0 0 15px rgba(255, 77, 77, 0.6); }
+        .red-text { 
+            color: #ff3b30 !important; 
+            text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); 
+            font-weight: 600;
+        }
 
         .zoom-layer { animation: continuousZoom 15s linear forwards; }
-        .relapse-entry { animation: blurFadeIn 1s ease-out forwards; }
-        .relapse-exit { animation: blurFadeOut 0.5s ease-in forwards; }
-        .relapse-exit-final { animation: blurFadeOut 1s ease-in forwards; }
+        .relapse-entry { animation: blurFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .relapse-exit { animation: blurFadeOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+        .relapse-exit-final { animation: blurFadeOut 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
 
         @keyframes blurFadeIn {
-            0% { opacity: 0; filter: blur(15px); }
-            100% { opacity: 1; filter: blur(0px); }
+            0% { opacity: 0; filter: blur(20px); transform: scale(0.95); }
+            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
         }
 
         @keyframes continuousZoom {
             0% { transform: scale(1); }
-            100% { transform: scale(1.5); }
+            100% { transform: scale(1.15); }
         }
 
         @keyframes blurFadeOut {
-            0% { opacity: 1; filter: blur(0px); }
-            100% { opacity: 0; filter: blur(20px); }
+            0% { opacity: 1; filter: blur(0px); transform: scale(1); }
+            100% { opacity: 0; filter: blur(20px); transform: scale(1.05); }
         }
 
-        .plot-twist-fade-in { animation: simpleFadeIn 5s ease-in-out forwards; }
+        .plot-twist-fade-in { animation: simpleFadeIn 4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         @keyframes simpleFadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0px); }
         }
 
         @media (max-width: 400px) {
-            #calc-container { box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; padding: 40px 20px; display: flex; flex-direction: column; justify-content: flex-end;}
-            #display { font-size: 5rem; margin-bottom: 30px;}
+            #calc-container { 
+                box-shadow: none; 
+                width: 100vw; 
+                height: 100vh; 
+                border-radius: 0; 
+                border: none;
+                padding: 40px 20px 50px 20px; 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: flex-end;
+                background: #000;
+                backdrop-filter: none;
+            }
+            #display { font-size: 5.5rem; margin-bottom: 30px;}
         }
     </style>
 </head>
@@ -251,25 +302,25 @@
         let currentStep = 0;
         let isTransitioning = false;
 
-        // PERFECTLY FIXED BASE64 LYRICS (No errors this time!)
+        // READABLE LYRICS ARRAY
         const messages = [
-            { text: atob("QWtvJ3kgYWxpcGluIG5nIHBhZy1pYmlnIG1v"), duration: 6000 },
-            { text: atob("SGFuZGFuZyBpYmlnaW4gYW5nIDxzcGFuIGNsYXNzPSdyZWQtdGV4dCc+aXNhbmcgdHVsYWQgbW88L3NwYW4+"), duration: 6500 },
-            { text: atob("SGFuZ2dhdCBhbmcgPHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5QdXNvPC9zcGFuPiBtbyd5"), duration: 2600 },
-            { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5TYSBha2luIGxhbmc8L3NwYW4+"), duration: 1400 },
-            { text: atob("SGluZGkga2FuYQ=="), duration: 1400 },
-            { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5NYWxpbGlubGFuZzwvc3Bhbj4="), duration: 1400 },
-            { text: atob("SWthdyBhbmcgPHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5pbGF3PC9zcGFuPiBzYSA8c3BhbiBjbGFzcz0ncmVkLXRleHQnPmRpbGltPC9zcGFuPg=="), duration: 2700 },
-            { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5BdCBhbmcgbGl3YW5hZzwvc3Bhbj4="), duration: 1700 },
-            { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5OZyBtZ2EgYml0dWluPC9zcGFuPg=="), duration: 5800 }
+            { text: "Ako'y alipin ng pag-ibig mo", duration: 6000 },
+            { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", duration: 6500 },
+            { text: "Hanggat ang <span class='red-text'>Puso</span> mo'y", duration: 2600 },
+            { text: "<span class='red-text'>Sa akin lang</span>", duration: 1400 },
+            { text: "Hindi kana", duration: 1400 },
+            { text: "<span class='red-text'>Malilinlang</span>", duration: 1400 },
+            { text: "Ikaw ang <span class='red-text'>ilaw</span> sa <span class='red-text'>dilim</span>", duration: 2700 },
+            { text: "<span class='red-text'>At ang liwanag</span>", duration: 1700 },
+            { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
         function appendNum(char, event) {
             event.stopPropagation();
-            // Automatically clear screen if letters are showing
-            if (display.innerText === "Error" || display.innerText === atob("TmFna2FtYWxpIGJhIGFrbz8=") || display.innerText === "Calculating...") {
+            if (display.innerText === "Error" || display.innerText === "Nagkamali ba ako?" || display.innerText === "Calculating...") {
                 display.innerText = "";
-                display.style.fontSize = "4.5rem";
+                display.style.fontSize = "4.8rem";
+                display.style.fontWeight = "200";
                 display.style.color = "#fff";
             }
             if (display.innerText === '0' && char !== '.') {
@@ -283,7 +334,8 @@
             event.stopPropagation();
             if(isTransitioning) return;
             display.innerText = '0';
-            display.style.fontSize = "4.5rem";
+            display.style.fontSize = "4.8rem";
+            display.style.fontWeight = "200";
             display.style.color = "#fff";
             appState = "CALC";
         }
@@ -309,21 +361,24 @@
 
             if (!isValid) {
                 display.innerText = "Error";
-                display.style.color = "#ff4d4d";
+                display.style.color = "#ff3b30";
+                display.style.fontWeight = "400";
                 return; 
             }
 
             // --- THE FAKE CALCULATION DELAY ---
             isTransitioning = true;
             display.innerText = "Calculating...";
-            display.style.fontSize = "2.5rem"; // Make text fit on screen
-            display.style.color = "#a0a0ab";
+            display.style.fontSize = "2.8rem"; 
+            display.style.fontWeight = "300";
+            display.style.color = "#888890";
 
             setTimeout(() => {
                 // The Plot Twist kicks in here
-                display.innerText = atob("TmFna2FtYWxpIGJhIGFrbz8="); // "Nagkamali ba ako?"
-                display.style.fontSize = "2.2rem";
-                display.style.color = "#ff4d4d";
+                display.innerText = "Nagkamali ba ako?"; 
+                display.style.fontSize = "2.4rem";
+                display.style.fontWeight = "400";
+                display.style.color = "#ff3b30";
 
                 // Prime Audio (Required for mobile browsers)
                 bgMusic.muted = true;
@@ -380,7 +435,7 @@
                     textField.classList.remove('relapse-entry');
                     textField.classList.add(isFinal ? 'relapse-exit-final' : 'relapse-exit');
 
-                    const transitionDelay = isFinal ? 1000 : 500;
+                    const transitionDelay = isFinal ? 1200 : 600;
 
                     setTimeout(() => {
                         currentStep++;
@@ -409,8 +464,7 @@
         function showPlotTwist() {
             zoomWrapper.classList.remove('zoom-layer');
             textField.classList.remove('relapse-exit', 'relapse-entry', 'relapse-exit-final');
-            // Base64 for "Aray mo Pakak!"
-            textField.innerHTML = atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5BcmF5IG1vIFBha2FrITwvc3Bhbj4=");
+            textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
             void textField.offsetWidth;
             textField.classList.add('plot-twist-fade-in'); 
         }
