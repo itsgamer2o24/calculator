@@ -82,7 +82,7 @@
         #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: -1; 
-            filter: blur(15px) brightness(0.4); /* Blurred and darkened for text visibility */
+            filter: blur(15px) brightness(0.4); 
         }
 
         .no-click { pointer-events: none; }
@@ -120,7 +120,6 @@
 
         .progress-container { width: 100%; display: flex; flex-direction: column; gap: 6px; }
         
-        /* NEW: Timestamps */
         .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a0a0ab; font-weight: 500; }
         
         .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
@@ -158,10 +157,6 @@
         <div class="orb orb-3"></div>
     </div>
 
-    <audio id="bg-music" preload="auto">
-        <source src="bulong.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="calc-container">
         <div id="display">0</div>
         <div class="button-layout">
@@ -192,7 +187,7 @@
     </div>
 
     <div id="void-overlay">
-        <video id="bg-video" loop playsinline muted>
+        <video id="bg-media" loop playsinline>
             <source src="video.mp4" type="video/mp4">
         </video>
 
@@ -223,7 +218,7 @@
     </div>
 
     <script>
-        // --- ANTI-SNOOP SECURITY WALL ---
+        // --- SECURITY WALL ---
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') { location.reload(); return; }
@@ -242,9 +237,7 @@
         const textField = document.getElementById('void-text');
         const zoomWrapper = document.getElementById('zoom-wrapper');
         
-        const bgMusic = document.getElementById('bg-music');
-        const bgVideo = document.getElementById('bg-video'); // Video Element
-        
+        const bgMedia = document.getElementById('bg-media'); 
         const progressFill = document.getElementById('progress-fill');
         const currentTimeEl = document.getElementById('current-time');
         const remainingTimeEl = document.getElementById('remaining-time');
@@ -266,22 +259,18 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
-        // Format seconds into minutes:seconds
         function formatTime(seconds) {
             const m = Math.floor(seconds / 60);
             const s = Math.floor(seconds % 60);
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // Sync Music GUI Progress Bar and Timestamps
-        bgMusic.addEventListener('timeupdate', () => {
-            if (bgMusic.duration) {
-                const current = bgMusic.currentTime;
-                const duration = bgMusic.duration;
-                
-                const progress = (current / duration) * 100;
-                progressFill.style.width = progress + '%';
-                
+        // GUI Timestamps reading directly from the video file
+        bgMedia.addEventListener('timeupdate', () => {
+            if (bgMedia.duration) {
+                const current = bgMedia.currentTime;
+                const duration = bgMedia.duration;
+                progressFill.style.width = ((current / duration) * 100) + '%';
                 currentTimeEl.innerText = formatTime(current);
                 remainingTimeEl.innerText = "-" + formatTime(duration - current);
             }
@@ -322,86 +311,72 @@
             event.stopPropagation();
             if (isTransitioning || display.innerText === "Error") return;
 
-            let userInput = display.innerText.replace(/\s/g, ''); // Clean up spaces
+            let userInput = display.innerText.replace(/\s/g, ''); 
+            let isValid = false;
 
-            // --- THE ULTIMATE TRAP LOGIC ---
-            // If they type exactly "1+1", trigger the cinematic sequence!
-            if (userInput === "1+1") {
-                isTransitioning = true;
-                display.innerText = "Calculating...";
-                display.style.fontSize = "2.8rem"; 
-                display.style.fontWeight = "300";
-                display.style.color = "#888890";
+            // First, make sure they actually typed a valid math equation
+            try {
+                if (!userInput || userInput === "0") throw new Error("Empty");
+                let result = eval(userInput);
+                if (result === Infinity || isNaN(result)) throw new Error("Math Error");
+                if (['+', '-', '*', '/'].includes(userInput.slice(-1))) throw new Error("Trailing operator");
+                isValid = true; 
+            } catch (e) { 
+                isValid = false; 
+            }
 
+            if (!isValid) {
+                display.innerText = "Error";
+                display.style.color = "#ff3b30";
+                display.style.fontWeight = "400";
+                display.style.fontSize = "4.8rem";
+                return; 
+            }
+
+            // --- THE TRAP: Triggered by ANY valid math equation ---
+            isTransitioning = true;
+            display.innerText = "Calculating...";
+            display.style.fontSize = "2.8rem"; 
+            display.style.fontWeight = "300";
+            display.style.color = "#888890";
+
+            setTimeout(() => {
+                display.innerText = "Nagkamali ba ako?"; 
+                display.style.fontSize = "2.4rem";
+                display.style.fontWeight = "400";
+                display.style.color = "#ff3b30";
+
+                // Play Video/Audio combined
+                bgMedia.volume = 0;
+                bgMedia.currentTime = 0;
+                
+                bgMedia.play().then(() => {
+                    let vol = 0;
+                    const fadeInInterval = setInterval(() => {
+                        if (vol < 1) {
+                            vol += 0.05; 
+                            bgMedia.volume = Math.min(vol, 1);
+                        } else clearInterval(fadeInInterval);
+                    }, 50); 
+                }).catch(e => console.log("Autoplay blocked by browser."));
+
+                calcContainer.style.transform = 'scale(0.9) translateY(50px)';
+                calcContainer.style.opacity = '0';
+                
                 setTimeout(() => {
-                    display.innerText = "Nagkamali ba ako?"; 
-                    display.style.fontSize = "2.4rem";
-                    display.style.fontWeight = "400";
-                    display.style.color = "#ff3b30";
-
-                    // Play Video and Audio
-                    bgVideo.play().catch(e => console.log("Video autoplay blocked"));
+                    calcContainer.style.display = 'none';
+                    overlay.style.display = 'flex';
+                    overlay.classList.add('no-click');
                     
-                    bgMusic.muted = true;
-                    bgMusic.play().then(() => {
-                        bgMusic.pause();
-                        bgMusic.muted = false;
-                        startAudioFade();
-                    }).catch(e => {
-                        bgMusic.muted = false;
-                        startAudioFade();
-                    });
-
-                    function startAudioFade() {
-                        bgMusic.currentTime = 183;
-                        bgMusic.volume = 0;
-                        bgMusic.play();
-
-                        let vol = 0;
-                        const fadeInInterval = setInterval(() => {
-                            if (vol < 1) {
-                                vol += 0.05; 
-                                bgMusic.volume = Math.min(vol, 1);
-                            } else clearInterval(fadeInInterval);
-                        }, 50); 
-                    }
-
-                    calcContainer.style.transform = 'scale(0.9) translateY(50px)';
-                    calcContainer.style.opacity = '0';
+                    setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
                     
                     setTimeout(() => {
-                        calcContainer.style.display = 'none';
-                        overlay.style.display = 'flex';
-                        overlay.classList.add('no-click');
-                        
-                        setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
-                        
-                        setTimeout(() => {
-                            appState = "RELAPSING";
-                            runAutomatedLyrics();
-                        }, 3000);
-                    }, 1500); 
+                        appState = "RELAPSING";
+                        runAutomatedLyrics();
+                    }, 3000);
+                }, 1500); 
 
-                }, 2000);
-            } 
-            // If they type anything else, act like a normal working calculator!
-            else {
-                try {
-                    // Evaluate the math problem normally
-                    let result = eval(userInput);
-                    
-                    // Show error if they try to divide by zero or break math rules
-                    if (result === Infinity || isNaN(result)) throw new Error("Math Error");
-                    
-                    display.innerText = result;
-                    updateFontSize();
-                } catch (e) {
-                    display.innerText = "Error";
-                    display.style.color = "#ff3b30";
-                    display.style.fontWeight = "400";
-                    display.style.fontSize = "4.8rem";
-                }
-            }
+            }, 2000);
         }
 
         function runAutomatedLyrics() {
