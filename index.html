@@ -16,9 +16,7 @@
         }
 
         body {
-            /* Cinematic deep background with subtle lighting */
             background-color: #050505;
-            background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #050505 80%);
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -27,20 +25,52 @@
             user-select: none;
         }
 
-        /* The Premium Glassmorphism Container */
+        /* --- DYNAMIC ANIMATED BACKGROUND --- */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: #050505;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* Creates the soft glow effect */
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
+        }
+
+        /* Deep blue/purple/orange theme to match the emotional song */
+        .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: -10%; left: -10%; animation-delay: 0s; }
+        .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: -20%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 40vw; height: 40vw; background: #8a3a0e; top: 40%; left: 50%; animation-delay: -10s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-5vw, 5vh) scale(1.1); }
+            100% { transform: translate(5vw, -5vh) scale(0.9); }
+        }
+
+        /* --- THE GLASS CALCULATOR --- */
         #calc-container {
-            background: rgba(30, 30, 35, 0.4);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(20, 20, 25, 0.35); /* More transparent to show colors */
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
             padding: 35px 22px 40px 22px;
             border-radius: 48px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 
                 0 40px 80px rgba(0,0,0,0.8), 
-                inset 0 1px 1px rgba(255,255,255,0.15),
+                inset 0 1px 1px rgba(255,255,255,0.2),
                 inset 0 -1px 1px rgba(0,0,0,0.5);
             width: 360px;
             transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            z-index: 10;
         }
 
         #display {
@@ -48,7 +78,7 @@
             height: 110px;
             color: #ffffff;
             font-size: 4.8rem; 
-            font-weight: 200; /* Ultra-light premium font weight */
+            font-weight: 200; 
             text-align: right;
             padding: 0 10px;
             margin-bottom: 20px;
@@ -56,8 +86,10 @@
             align-items: flex-end;
             justify-content: flex-end;
             overflow: hidden;
-            letter-spacing: -2.5px;
+            letter-spacing: -2px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+            transition: font-size 0.2s ease; /* Smooth shrink animation */
         }
 
         .button-layout {
@@ -78,20 +110,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Premium translucent buttons */
             background: rgba(255, 255, 255, 0.08);
             color: #eeeeee;
             border: 1px solid rgba(255, 255, 255, 0.03);
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        /* Micro-interaction animations */
         button:active { 
             transform: scale(0.92); 
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* Top row function buttons */
         .func { 
             background: rgba(255, 255, 255, 0.15); 
             color: #ffffff; 
@@ -100,7 +129,6 @@
         }
         .func:active { background: rgba(255, 255, 255, 0.3); }
 
-        /* Operator buttons (Apple Vibrant Orange) */
         .op { 
             background: #FF9F0A; 
             color: #fff; 
@@ -137,12 +165,7 @@
 
         .no-click { pointer-events: none; }
 
-        #zoom-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; }
 
         #void-text {
             font-size: 2.2rem;
@@ -170,64 +193,39 @@
         }
 
         .name-fade-in { animation: mattFade 2s ease forwards; }
+        @keyframes mattFade { 0% { opacity: 0; filter: blur(10px); } 100% { opacity: 1; filter: blur(0px); } }
 
-        @keyframes mattFade {
-            0% { opacity: 0; filter: blur(10px); }
-            100% { opacity: 1; filter: blur(0px); }
-        }
-
-        .red-text { 
-            color: #ff3b30 !important; 
-            text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); 
-            font-weight: 600;
-        }
+        .red-text { color: #ff3b30 !important; text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); font-weight: 600; }
 
         .zoom-layer { animation: continuousZoom 15s linear forwards; }
         .relapse-entry { animation: blurFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .relapse-exit { animation: blurFadeOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
         .relapse-exit-final { animation: blurFadeOut 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
 
-        @keyframes blurFadeIn {
-            0% { opacity: 0; filter: blur(20px); transform: scale(0.95); }
-            100% { opacity: 1; filter: blur(0px); transform: scale(1); }
-        }
-
-        @keyframes continuousZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.15); }
-        }
-
-        @keyframes blurFadeOut {
-            0% { opacity: 1; filter: blur(0px); transform: scale(1); }
-            100% { opacity: 0; filter: blur(20px); transform: scale(1.05); }
-        }
+        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(20px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
+        @keyframes continuousZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(20px); transform: scale(1.05); } }
 
         .plot-twist-fade-in { animation: simpleFadeIn 4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        @keyframes simpleFadeIn {
-            0% { opacity: 0; transform: scale(0.9); filter: blur(10px); }
-            100% { opacity: 1; transform: scale(1); filter: blur(0px); }
-        }
+        @keyframes simpleFadeIn { 0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0px); } }
 
         @media (max-width: 400px) {
             #calc-container { 
-                box-shadow: none; 
-                width: 100vw; 
-                height: 100vh; 
-                border-radius: 0; 
-                border: none;
-                padding: 40px 20px 50px 20px; 
-                display: flex; 
-                flex-direction: column; 
-                justify-content: flex-end;
-                background: #000;
-                backdrop-filter: none;
+                box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; border: none;
+                padding: 40px 20px 50px 20px; display: flex; flex-direction: column; justify-content: flex-end;
+                background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
             }
             #display { font-size: 5.5rem; margin-bottom: 30px;}
         }
     </style>
 </head>
 <body>
+
+    <div class="bg-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
     <audio id="bg-music" preload="auto">
         <source src="bulong.mp3" type="audio/mpeg">
@@ -302,7 +300,6 @@
         let currentStep = 0;
         let isTransitioning = false;
 
-        // READABLE LYRICS ARRAY
         const messages = [
             { text: "Ako'y alipin ng pag-ibig mo", duration: 6000 },
             { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", duration: 6500 },
@@ -315,11 +312,20 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
+        // --- DYNAMIC FONT SIZING (Just like a real calculator) ---
+        function updateFontSize() {
+            if (isTransitioning) return;
+            const len = display.innerText.length;
+            if (len > 14) display.style.fontSize = "1.8rem";
+            else if (len > 11) display.style.fontSize = "2.4rem";
+            else if (len > 8) display.style.fontSize = "3.2rem";
+            else display.style.fontSize = "4.8rem";
+        }
+
         function appendNum(char, event) {
             event.stopPropagation();
             if (display.innerText === "Error" || display.innerText === "Nagkamali ba ako?" || display.innerText === "Calculating...") {
                 display.innerText = "";
-                display.style.fontSize = "4.8rem";
                 display.style.fontWeight = "200";
                 display.style.color = "#fff";
             }
@@ -328,15 +334,16 @@
             } else {
                 display.innerText += char;
             }
+            updateFontSize();
         }
 
         function clearDisplay(event) {
             event.stopPropagation();
             if(isTransitioning) return;
             display.innerText = '0';
-            display.style.fontSize = "4.8rem";
             display.style.fontWeight = "200";
             display.style.color = "#fff";
+            updateFontSize();
             appState = "CALC";
         }
 
@@ -363,6 +370,7 @@
                 display.innerText = "Error";
                 display.style.color = "#ff3b30";
                 display.style.fontWeight = "400";
+                display.style.fontSize = "4.8rem";
                 return; 
             }
 
@@ -374,13 +382,11 @@
             display.style.color = "#888890";
 
             setTimeout(() => {
-                // The Plot Twist kicks in here
                 display.innerText = "Nagkamali ba ako?"; 
                 display.style.fontSize = "2.4rem";
                 display.style.fontWeight = "400";
                 display.style.color = "#ff3b30";
 
-                // Prime Audio (Required for mobile browsers)
                 bgMusic.muted = true;
                 bgMusic.play().then(() => {
                     bgMusic.pause();
@@ -407,7 +413,6 @@
                     }, 50); 
                 }
 
-                // Fade out the calculator gently
                 calcContainer.style.opacity = '0';
                 
                 setTimeout(() => {
@@ -416,14 +421,13 @@
                     overlay.classList.add('no-click');
                     mattName.classList.add('name-fade-in');
                     
-                    // Wait before starting the lyrics text
                     setTimeout(() => {
                         appState = "RELAPSING";
                         runAutomatedLyrics();
                     }, 3000);
                 }, 1500); 
 
-            }, 2000); // Waits exactly 2 seconds pretending to calculate!
+            }, 2000); 
         }
 
         function runAutomatedLyrics() {
