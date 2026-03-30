@@ -25,51 +25,55 @@
             user-select: none;
         }
 
-        /* --- DYNAMIC ANIMATED BACKGROUND --- */
+        /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
         .bg-mesh {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            /* Made extra large so corners don't show when spinning */
+            top: -50vh;
+            left: -50vw;
+            width: 200vw;
+            height: 200vh;
             z-index: -1;
             background: #050505;
             overflow: hidden;
+            /* The entire background spins slowly! */
+            animation: spinMesh 40s linear infinite;
+        }
+
+        @keyframes spinMesh {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px); /* Creates the soft glow effect */
-            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(90px); 
             opacity: 0.6;
+            animation: pulseOrb 10s infinite alternate;
         }
 
-        /* Deep blue/purple/orange theme to match the emotional song */
-        .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: -10%; left: -10%; animation-delay: 0s; }
-        .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: -20%; right: -10%; animation-delay: -5s; }
-        .orb-3 { width: 40vw; height: 40vw; background: #8a3a0e; top: 40%; left: 50%; animation-delay: -10s; }
+        /* Premium cinematic colors */
+        .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: 20%; left: 20%; }
+        .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: 20%; right: 20%; animation-delay: -3s; }
+        .orb-3 { width: 45vw; height: 45vw; background: #8a3a0e; top: 40%; left: 40%; animation-delay: -6s; }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-5vw, 5vh) scale(1.1); }
-            100% { transform: translate(5vw, -5vh) scale(0.9); }
+        @keyframes pulseOrb {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0.8; }
         }
 
         /* --- THE GLASS CALCULATOR --- */
         #calc-container {
-            background: rgba(20, 20, 25, 0.35); /* More transparent to show colors */
+            background: rgba(20, 20, 25, 0.4); 
             backdrop-filter: blur(50px);
             -webkit-backdrop-filter: blur(50px);
             padding: 35px 22px 40px 22px;
             border-radius: 48px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-                0 40px 80px rgba(0,0,0,0.8), 
-                inset 0 1px 1px rgba(255,255,255,0.2),
-                inset 0 -1px 1px rgba(0,0,0,0.5);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.5);
             width: 360px;
-            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1); 
+            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease; 
             z-index: 10;
         }
 
@@ -89,73 +93,27 @@
             letter-spacing: -2px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
             white-space: nowrap;
-            transition: font-size 0.2s ease; /* Smooth shrink animation */
+            transition: font-size 0.2s ease; 
         }
 
-        .button-layout {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-        }
-
-        button {
-            border: none;
-            height: 72px;
-            width: 100%;
-            border-radius: 36px;
-            font-size: 1.8rem;
-            font-weight: 400;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.08);
-            color: #eeeeee;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        button:active { 
-            transform: scale(0.92); 
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .func { 
-            background: rgba(255, 255, 255, 0.15); 
-            color: #ffffff; 
-            font-size: 1.5rem; 
-            font-weight: 500;
-        }
+        .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        button { border: none; height: 72px; width: 100%; border-radius: 36px; font-size: 1.8rem; font-weight: 400; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08); color: #eeeeee; border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        button:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.2); }
+        .func { background: rgba(255, 255, 255, 0.15); color: #ffffff; font-size: 1.5rem; font-weight: 500; }
         .func:active { background: rgba(255, 255, 255, 0.3); }
+        .op { background: #FF9F0A; color: #fff; font-size: 2.2rem; font-weight: 500; border: 1px solid rgba(255, 159, 10, 0.5); box-shadow: 0 8px 20px rgba(255, 159, 10, 0.3); }
+        .op:active { background: #d98505; box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2); }
+        .oval { grid-column: span 2; width: 100%; border-radius: 36px; justify-content: flex-start; padding-left: 28px; }
 
-        .op { 
-            background: #FF9F0A; 
-            color: #fff; 
-            font-size: 2.2rem; 
-            font-weight: 500;
-            border: 1px solid rgba(255, 159, 10, 0.5);
-            box-shadow: 0 8px 20px rgba(255, 159, 10, 0.3);
-        }
-        .op:active { 
-            background: #d98505; 
-            box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2);
-        }
-
-        .oval { 
-            grid-column: span 2; 
-            width: 100%; 
-            border-radius: 36px; 
-            justify-content: flex-start;
-            padding-left: 28px;
-        }
-
-        /* --- OVERLAY & CINEMATICS --- */
+        /* --- CINEMATIC MUSIC OVERLAY --- */
         #void-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
+            /* Semi-transparent so the spinning colors show through! */
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -164,8 +122,7 @@
         }
 
         .no-click { pointer-events: none; }
-
-        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; }
+        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
 
         #void-text {
             font-size: 2.2rem;
@@ -179,42 +136,73 @@
             letter-spacing: -0.5px;
         }
 
-        #matt-name {
+        /* --- MUSIC PLAYER GUI --- */
+        #music-gui {
             position: absolute;
-            bottom: 25%;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.5);
-            opacity: 0; 
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+            bottom: 40px;
+            width: 85%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 2s ease;
         }
 
-        .name-fade-in { animation: mattFade 2s ease forwards; }
-        @keyframes mattFade { 0% { opacity: 0; filter: blur(10px); } 100% { opacity: 1; filter: blur(0px); } }
+        .gui-header { display: flex; align-items: center; gap: 15px; }
+
+        /* The Spinning Record/Album Art */
+        .album-art {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            /* Placeholder gradient for Album Art */
+            background: linear-gradient(135deg, #FF9F0A, #ff3b30);
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.4), inset 0 0 10px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: spinArt 4s linear infinite;
+        }
+
+        /* The record hole */
+        .album-art::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px; height: 12px;
+            background: #000;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        @keyframes spinArt { 100% { transform: rotate(360deg); } }
+
+        .track-details { display: flex; flex-direction: column; }
+        .track-title { color: #fff; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
+        .track-artist { color: #a0a0ab; font-size: 0.9rem; font-weight: 400; }
+
+        /* The Progress Bar */
+        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+        .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.1s linear; }
+        
+        #matt-name { position: absolute; top: 40px; color: rgba(255, 255, 255, 0.4); font-size: 0.9rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; }
 
         .red-text { color: #ff3b30 !important; text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); font-weight: 600; }
 
+        /* Animations */
         .zoom-layer { animation: continuousZoom 15s linear forwards; }
         .relapse-entry { animation: blurFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .relapse-exit { animation: blurFadeOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
         .relapse-exit-final { animation: blurFadeOut 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
-
         @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(20px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
         @keyframes continuousZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
         @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(20px); transform: scale(1.05); } }
-
         .plot-twist-fade-in { animation: simpleFadeIn 4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes simpleFadeIn { 0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0px); } }
 
         @media (max-width: 400px) {
-            #calc-container { 
-                box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; border: none;
-                padding: 40px 20px 50px 20px; display: flex; flex-direction: column; justify-content: flex-end;
-                background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none;
-            }
+            #calc-container { box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; border: none; padding: 40px 20px 50px 20px; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
             #display { font-size: 5.5rem; margin-bottom: 30px;}
         }
     </style>
@@ -261,24 +249,34 @@
     </div>
 
     <div id="void-overlay">
+        <div id="matt-name">MATT</div>
+        
         <div id="zoom-wrapper">
             <div id="void-text"></div>
         </div>
-        <div id="matt-name">MATT</div>
+
+        <div id="music-gui">
+            <div class="gui-header">
+                <div class="album-art"></div> 
+                <div class="track-details">
+                    <div class="track-title">Bulong</div>
+                    <div class="track-artist">December Avenue</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         // --- ANTI-SNOOP SECURITY WALL ---
         document.addEventListener('contextmenu', event => event.preventDefault());
-
         document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') {
-                location.reload(); 
-                return; 
-            }
-            if (e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault(); return;
-            }
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') { location.reload(); return; }
+            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return; }
             if (e.ctrlKey || e.metaKey) {
                 const k = e.key.toLowerCase();
                 if (k === 'u' || k === 's' || k === 'p' || (e.shiftKey && k === 'i') || (e.shiftKey && k === 'c')) {
@@ -286,15 +284,15 @@
                 }
             }
         });
-        // --- END SECURITY WALL ---
 
         const display = document.getElementById('display');
         const calcContainer = document.getElementById('calc-container');
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
         const zoomWrapper = document.getElementById('zoom-wrapper');
-        const mattName = document.getElementById('matt-name');
         const bgMusic = document.getElementById('bg-music');
+        const progressFill = document.getElementById('progress-fill');
+        const musicGui = document.getElementById('music-gui');
 
         let appState = "CALC"; 
         let currentStep = 0;
@@ -312,7 +310,14 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
-        // --- DYNAMIC FONT SIZING (Just like a real calculator) ---
+        // Sync Music GUI Progress Bar
+        bgMusic.addEventListener('timeupdate', () => {
+            if (bgMusic.duration) {
+                const progress = (bgMusic.currentTime / bgMusic.duration) * 100;
+                progressFill.style.width = progress + '%';
+            }
+        });
+
         function updateFontSize() {
             if (isTransitioning) return;
             const len = display.innerText.length;
@@ -329,11 +334,8 @@
                 display.style.fontWeight = "200";
                 display.style.color = "#fff";
             }
-            if (display.innerText === '0' && char !== '.') {
-                display.innerText = char;
-            } else {
-                display.innerText += char;
-            }
+            if (display.innerText === '0' && char !== '.') display.innerText = char;
+            else display.innerText += char;
             updateFontSize();
         }
 
@@ -349,8 +351,7 @@
 
         function startSequence(event) {
             event.stopPropagation();
-            if (isTransitioning) return;
-            if (display.innerText === "Error") return;
+            if (isTransitioning || display.innerText === "Error") return;
 
             let userInput = display.innerText;
             let isValid = false;
@@ -358,13 +359,9 @@
             try {
                 if (!userInput || userInput === "0") throw new Error("Empty");
                 eval(userInput);
-                if (['+', '-', '*', '/'].includes(userInput.slice(-1))) {
-                    throw new Error("Trailing operator");
-                }
+                if (['+', '-', '*', '/'].includes(userInput.slice(-1))) throw new Error("Trailing operator");
                 isValid = true; 
-            } catch (e) {
-                isValid = false;
-            }
+            } catch (e) { isValid = false; }
 
             if (!isValid) {
                 display.innerText = "Error";
@@ -374,7 +371,7 @@
                 return; 
             }
 
-            // --- THE FAKE CALCULATION DELAY ---
+            // Fake calculation loading state
             isTransitioning = true;
             display.innerText = "Calculating...";
             display.style.fontSize = "2.8rem"; 
@@ -407,19 +404,21 @@
                         if (vol < 1) {
                             vol += 0.05; 
                             bgMusic.volume = Math.min(vol, 1);
-                        } else {
-                            clearInterval(fadeInInterval);
-                        }
+                        } else clearInterval(fadeInInterval);
                     }, 50); 
                 }
 
+                // Push Calculator down and fade out
+                calcContainer.style.transform = 'scale(0.9) translateY(50px)';
                 calcContainer.style.opacity = '0';
                 
                 setTimeout(() => {
                     calcContainer.style.display = 'none';
                     overlay.style.display = 'flex';
                     overlay.classList.add('no-click');
-                    mattName.classList.add('name-fade-in');
+                    
+                    // Fade in the Music Player GUI
+                    setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
                     
                     setTimeout(() => {
                         appState = "RELAPSING";
@@ -433,23 +432,16 @@
         function runAutomatedLyrics() {
             if (currentStep < messages.length) {
                 renderMessage(messages[currentStep].text);
-                
                 setTimeout(() => {
                     const isFinal = currentStep === messages.length - 1;
                     textField.classList.remove('relapse-entry');
                     textField.classList.add(isFinal ? 'relapse-exit-final' : 'relapse-exit');
 
-                    const transitionDelay = isFinal ? 1200 : 600;
-
                     setTimeout(() => {
                         currentStep++;
-                        if (currentStep < messages.length) {
-                            runAutomatedLyrics();
-                        } else {
-                            showPlotTwist();
-                        }
-                    }, transitionDelay); 
-
+                        if (currentStep < messages.length) runAutomatedLyrics();
+                        else showPlotTwist();
+                    }, isFinal ? 1200 : 600); 
                 }, messages[currentStep].duration);
             }
         }
