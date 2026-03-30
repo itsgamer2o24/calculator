@@ -28,7 +28,6 @@
         /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
         .bg-mesh {
             position: fixed;
-            /* Made extra large so corners don't show when spinning */
             top: -50vh;
             left: -50vw;
             width: 200vw;
@@ -36,7 +35,6 @@
             z-index: -1;
             background: #050505;
             overflow: hidden;
-            /* The entire background spins slowly! */
             animation: spinMesh 40s linear infinite;
         }
 
@@ -110,7 +108,6 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            /* Semi-transparent so the spinning colors show through! */
             background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
@@ -151,14 +148,13 @@
 
         .gui-header { display: flex; align-items: center; gap: 15px; }
 
-        /* The Spinning Record/Album Art */
+        /* The Spinning Record/Album Art with the real cover */
         .album-art {
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            /* Placeholder gradient for Album Art */
-            background: linear-gradient(135deg, #FF9F0A, #ff3b30);
-            box-shadow: 0 0 20px rgba(255, 59, 48, 0.4), inset 0 0 10px rgba(0,0,0,0.5);
+            background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             border: 2px solid rgba(255,255,255,0.1);
             animation: spinArt 4s linear infinite;
         }
