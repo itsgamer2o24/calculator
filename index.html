@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calacutayo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
             outline: none;
         }
@@ -23,57 +23,73 @@
             align-items: center;
             overflow: hidden;
             user-select: none;
-            cursor: pointer;
         }
 
+        /* Upgraded to look exactly like an iPhone screen */
         #calc-container {
-            background: #1a1a1a;
-            padding: 30px;
-            border-radius: 45px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
-            width: 350px;
-            transition: opacity 1s ease; 
-            cursor: default;
+            background: #000;
+            padding: 25px 20px;
+            border-radius: 40px;
+            box-shadow: 0 0 0 8px #222, 0 20px 50px rgba(0,0,0,0.8); /* Creates a fake phone bezel */
+            width: 340px;
+            transition: opacity 1.5s ease; 
         }
 
         #display {
             width: 100%;
-            height: 90px;
+            height: 100px;
             color: #fff;
-            font-size: 2.2rem;
+            font-size: 4.5rem; /* Huge iOS style text */
+            font-weight: 300;
             text-align: right;
-            padding: 10px;
-            margin-bottom: 20px;
+            padding: 0 10px;
+            margin-bottom: 15px;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: flex-end;
-            word-break: break-all;
             overflow: hidden;
+            letter-spacing: -2px;
         }
 
         .button-layout {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         button {
             border: none;
-            height: 65px;
-            width: 65px;
+            height: 68px;
+            width: 68px;
             border-radius: 50%;
-            background: #2a2a2a;
-            color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.05);
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        button:active { transform: scale(0.9); }
-        .oval { grid-column: span 2; width: 145px; border-radius: 50px; }
-        .op { background: #333; color: #fff; }
-        .func { background: #444; color: #fff; }
+        /* iOS Specific Button Colors */
+        .num { background: #333333; color: #fff; }
+        .num:active { background: #737373; }
 
+        .func { background: #a5a5a5; color: #000; font-size: 1.6rem; font-weight: 400;}
+        .func:active { background: #d9d9d9; }
+
+        .op { background: #ff9f0a; color: #fff; font-size: 2.2rem; font-weight: 500;}
+        .op:active { background: #c97c00; }
+
+        /* The big zero button */
+        .oval { 
+            grid-column: span 2; 
+            width: 100%; 
+            border-radius: 40px; 
+            justify-content: flex-start;
+            padding-left: 25px;
+        }
+
+        /* Cinematic Overlay */
         #void-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -153,6 +169,11 @@
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
+
+        @media (max-width: 400px) {
+            #calc-container { box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; padding: 40px 20px; display: flex; flex-direction: column; justify-content: flex-end;}
+            #display { font-size: 5rem; margin-bottom: 30px;}
+        }
     </style>
 </head>
 <body>
@@ -169,23 +190,23 @@
             <button class="func" onclick="appendNum(')', event)">)</button>
             <button class="op" onclick="appendNum('/', event)">÷</button>
             
-            <button onclick="appendNum('7', event)">7</button>
-            <button onclick="appendNum('8', event)">8</button>
-            <button onclick="appendNum('9', event)">9</button>
+            <button class="num" onclick="appendNum('7', event)">7</button>
+            <button class="num" onclick="appendNum('8', event)">8</button>
+            <button class="num" onclick="appendNum('9', event)">9</button>
             <button class="op" onclick="appendNum('*', event)">×</button>
             
-            <button onclick="appendNum('4', event)">4</button>
-            <button onclick="appendNum('5', event)">5</button>
-            <button onclick="appendNum('6', event)">6</button>
-            <button class="op" onclick="appendNum('-', event)">-</button>
+            <button class="num" onclick="appendNum('4', event)">4</button>
+            <button class="num" onclick="appendNum('5', event)">5</button>
+            <button class="num" onclick="appendNum('6', event)">6</button>
+            <button class="op" onclick="appendNum('-', event)">−</button>
             
-            <button onclick="appendNum('1', event)">1</button>
-            <button onclick="appendNum('2', event)">2</button>
-            <button onclick="appendNum('3', event)">3</button>
+            <button class="num" onclick="appendNum('1', event)">1</button>
+            <button class="num" onclick="appendNum('2', event)">2</button>
+            <button class="num" onclick="appendNum('3', event)">3</button>
             <button class="op" onclick="appendNum('+', event)">+</button>
             
-            <button class="oval" onclick="appendNum('0', event)">0</button>
-            <button onclick="appendNum('.', event)">.</button>
+            <button class="num oval" onclick="appendNum('0', event)">0</button>
+            <button class="num" onclick="appendNum('.', event)">.</button>
             <button class="op" onclick="startSequence(event)">=</button>
         </div>
     </div>
@@ -230,9 +251,8 @@
         let currentStep = 0;
         let isTransitioning = false;
 
-        // Base64 Scrambled Lyrics
+        // PERFECTLY FIXED BASE64 LYRICS (No errors this time!)
         const messages = [
-            { text: atob("UWFtYW1hdGF5IGFrb25n... wait, I mean: QWtvJ3kgYWxpcGluIG5nIHBhZy1pYmlnIG1v"), duration: 6000 },
             { text: atob("QWtvJ3kgYWxpcGluIG5nIHBhZy1pYmlnIG1v"), duration: 6000 },
             { text: atob("SGFuZGFuZyBpYmlnaW4gYW5nIDxzcGFuIGNsYXNzPSdyZWQtdGV4dCc+aXNhbmcgdHVsYWQgbW88L3NwYW4+"), duration: 6500 },
             { text: atob("SGFuZ2dhdCBhbmcgPHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5QdXNvPC9zcGFuPiBtbyd5"), duration: 2600 },
@@ -243,14 +263,13 @@
             { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5BdCBhbmcgbGl3YW5hZzwvc3Bhbj4="), duration: 1700 },
             { text: atob("PHNwYW4gY2xhc3M9J3JlZC10ZXh0Jz5OZyBtZ2EgYml0dWluPC9zcGFuPg=="), duration: 5800 }
         ];
-        
-        // Remove the accidental duplicate first entry that happened during encoding logic above:
-        messages.shift();
 
         function appendNum(char, event) {
             event.stopPropagation();
+            // Automatically clear screen if letters are showing
             if (display.innerText === "Error" || display.innerText === atob("TmFna2FtYWxpIGJhIGFrbz8=") || display.innerText === "Calculating...") {
                 display.innerText = "";
+                display.style.fontSize = "4.5rem";
                 display.style.color = "#fff";
             }
             if (display.innerText === '0' && char !== '.') {
@@ -264,6 +283,7 @@
             event.stopPropagation();
             if(isTransitioning) return;
             display.innerText = '0';
+            display.style.fontSize = "4.5rem";
             display.style.color = "#fff";
             appState = "CALC";
         }
@@ -296,11 +316,13 @@
             // --- THE FAKE CALCULATION DELAY ---
             isTransitioning = true;
             display.innerText = "Calculating...";
+            display.style.fontSize = "2.5rem"; // Make text fit on screen
             display.style.color = "#a0a0ab";
 
             setTimeout(() => {
                 // The Plot Twist kicks in here
-                display.innerText = atob("TmFna2FtYWxpIGJhIGFrbz8="); // Nagkamali ba ako?
+                display.innerText = atob("TmFna2FtYWxpIGJhIGFrbz8="); // "Nagkamali ba ako?"
+                display.style.fontSize = "2.2rem";
                 display.style.color = "#ff4d4d";
 
                 // Prime Audio (Required for mobile browsers)
@@ -330,7 +352,7 @@
                     }, 50); 
                 }
 
-                // Fade out the calculator
+                // Fade out the calculator gently
                 calcContainer.style.opacity = '0';
                 
                 setTimeout(() => {
@@ -339,11 +361,12 @@
                     overlay.classList.add('no-click');
                     mattName.classList.add('name-fade-in');
                     
+                    // Wait before starting the lyrics text
                     setTimeout(() => {
                         appState = "RELAPSING";
                         runAutomatedLyrics();
                     }, 3000);
-                }, 1000); 
+                }, 1500); 
 
             }, 2000); // Waits exactly 2 seconds pretending to calculate!
         }
