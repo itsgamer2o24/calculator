@@ -3,99 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculator Pro</title>
+    <title>Mathematics Online Module</title>
     
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
+    <meta property="og:title" content="Mathematics Online Module">
+    <meta property="og:description" content="JEC Enrollment Portal - Student Assessment Tool">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
+    <meta name="theme-color" id="theme-meta" content="#0d0d0d">
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary-orange: #ff9f0a;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glow-white: 0 0 10px #fff, 0 0 20px rgba(255,255,255,0.5);
-            --glow-red: 0 0 15px #ff3b30, 0 0 30px rgba(255, 59, 48, 0.6);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glow-white: 0 0 25px rgba(255,255,255,0.6);
+            --glow-red: 0 0 30px #ff3b30, 0 0 60px rgba(255, 59, 48, 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background-color: #010101; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; user-select: none; perspective: 1500px; }
+        
+        body { 
+            background-color: #000; height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center; 
+            overflow: hidden; user-select: none; perspective: 1200px; 
+            font-family: 'Montserrat', sans-serif;
+        }
 
-        /* --- DYNAMIC BACKGROUND --- */
-        .bg-mesh { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: -1; animation: spinMesh 50s linear infinite; }
-        @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.35; animation: pulseOrb 15s infinite alternate ease-in-out; }
-        .orb-1 { width: 80vw; height: 80vw; background: #1a237e; top: 10%; left: 5%; }
-        .orb-2 { width: 70vw; height: 70vw; background: #4a148c; bottom: 5%; right: 5%; }
-        .orb-3 { width: 60vw; height: 60vw; background: #bf360c; top: 30%; left: 40%; }
-        @keyframes pulseOrb { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+        /* --- THE WATCHDOG SCREEN --- */
+        #system-locked {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #ff0000; color: #fff; z-index: 10000;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            font-family: 'Syncopate', sans-serif; text-align: center; padding: 20px;
+        }
 
-        /* --- GLASS CALCULATOR --- */
+        /* --- AMBIENT BG --- */
+        .bg-mesh { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1; animation: spin 60s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
+        .orb-1 { width: 90vw; height: 90vw; background: #1a237e; top: 10%; left: 5%; }
+        .orb-2 { width: 80vw; height: 80vw; background: #4a148c; bottom: 5%; right: 5%; }
+        .orb-3 { width: 70vw; height: 70vw; background: #bf360c; top: 35%; left: 35%; }
+
+        /* --- TITAN CALCULATOR GUI --- */
         #calc-container {
-            background: var(--glass-bg); backdrop-filter: blur(80px) saturate(180%); -webkit-backdrop-filter: blur(80px) saturate(180%);
-            padding: 45px 28px; border-radius: 65px; border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1);
-            width: 380px; z-index: 10; transition: transform 0.15s ease-out, opacity 0.8s ease; transform-style: preserve-3d;
+            background: var(--glass); backdrop-filter: blur(60px) saturate(180%);
+            -webkit-backdrop-filter: blur(60px) saturate(180%);
+            padding: 40px 25px; border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.1);
+            width: 90%; max-width: 380px; z-index: 10;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
         }
 
         #display {
-            width: 100%; height: 130px; color: #fff; font-family: 'Montserrat', sans-serif;
-            font-size: 5.2rem; font-weight: 100; text-align: right; padding: 0 15px; margin-bottom: 30px;
-            display: flex; align-items: flex-end; justify-content: flex-end; letter-spacing: -4px; transition: font-size 0.25s ease;
-            white-space: nowrap; overflow: hidden; text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            width: 100%; height: 120px; color: #fff; text-align: right;
+            padding: 0 15px; margin-bottom: 30px;
+            display: flex; align-items: flex-end; justify-content: flex-end;
+            font-size: clamp(3rem, 15vw, 5.5rem); font-weight: 100;
+            letter-spacing: -4px; white-space: nowrap; overflow: hidden;
         }
 
-        .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
         button {
-            border: none; height: 74px; width: 100%; border-radius: 37px; font-family: 'Montserrat', sans-serif;
-            font-size: 1.7rem; font-weight: 300; cursor: pointer; transition: all 0.2s;
-            display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.05); color: #fff;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            border: none; height: clamp(65px, 16vw, 75px); width: 100%; 
+            border-radius: 50%; font-size: 1.8rem; font-weight: 300; 
+            cursor: pointer; transition: 0.2s;
+            display: flex; justify-content: center; align-items: center; 
+            background: rgba(255, 255, 255, 0.08); color: #fff;
         }
-        button:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.12); }
-        .func { background: rgba(255, 255, 255, 0.12); font-weight: 600; }
+        button:active { transform: scale(0.85); background: rgba(255, 255, 255, 0.2); }
+        .func { background: rgba(255, 255, 255, 0.15); font-weight: 600; font-size: 1.3rem; }
         .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; }
-        .oval { grid-column: span 2; justify-content: flex-start; padding-left: 32px; border-radius: 40px; }
+        .oval { grid-column: span 2; justify-content: flex-start; padding-left: 35px; border-radius: 40px; }
 
-        /* --- CINEMATIC OVERLAY --- */
+        /* --- THE CINEMATIC CENTERED VOID --- */
         #void-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
-            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: #000; display: none; z-index: 999;
+            flex-direction: column; justify-content: center; align-items: center;
         }
-        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(35px) brightness(0.25); }
-        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
+        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(45px) brightness(0.2); opacity: 0; transition: 3s; }
+        
+        #zoom-wrapper { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center; 
+            z-index: 1000; pointer-events: none;
+        }
         
         #void-text {
-            font-family: 'Playfair Display', serif; font-size: 3.4rem; font-style: italic; font-weight: 700; 
-            text-align: center; width: 90%; opacity: 0; line-height: 1.2; color: #fff;
-            text-shadow: var(--glow-white); animation: breatheGlow 3s ease-in-out infinite;
+            font-family: 'Playfair Display', serif; 
+            font-size: clamp(2.5rem, 12vw, 4.5rem); 
+            font-style: italic; font-weight: 700; 
+            text-align: center; width: 90%;
+            opacity: 0; line-height: 1.1; color: #fff; 
+            text-shadow: var(--glow-white);
         }
-        @keyframes breatheGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
         .red-text { color: #ff3b30 !important; text-shadow: var(--glow-red) !important; }
 
-        /* ANIMATIONS */
-        .zoom-absolute { animation: zoomAbsolute 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes zoomAbsolute { 0% { transform: scale(0); opacity: 0; filter: blur(40px); } 45% { transform: scale(1.45); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; } }
+        /* --- ANIMATIONS --- */
+        .glitch-shake { animation: shake 0.1s infinite; filter: hue-rotate(90deg) contrast(200%); }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
+        
+        .zoom-absolute { animation: zoomImpact 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes zoomImpact { 0% { transform: scale(0.05); opacity: 0; filter: blur(50px); } 40% { transform: scale(1.2); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; } }
+        
         .lyric-in { animation: lyricIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
-        @keyframes lyricIn { 0% { transform: translateY(40px); opacity: 0; filter: blur(20px); } 100% { transform: translateY(0); opacity: 1; filter: blur(0px); } }
+        @keyframes lyricIn { 0% { transform: scale(0.9) translateY(20px); opacity: 0; filter: blur(20px); } 100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); } }
+        
         .lyric-out { animation: lyricOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
-        @keyframes lyricOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; filter: blur(25px); } }
+        @keyframes lyricOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; filter: blur(30px); } }
 
-        /* --- MUSIC GUI --- */
-        #music-gui { position: absolute; bottom: 60px; width: 80%; max-width: 420px; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: all 2s ease; }
-        .gui-header { display: flex; align-items: center; gap: 20px; }
-        .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.1); animation: spinArt 8s linear infinite; }
-        @keyframes spinArt { 100% { transform: rotate(360deg); } }
-        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
-        .track-artist { font-family: 'Montserrat', sans-serif; color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px; margin-top: 4px; }
-        .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 2px; box-shadow: 0 0 15px #fff; }
-        .time-row { font-family: 'Montserrat', sans-serif; display: flex; justify-content: space-between; font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 8px; }
-
-        #signature { position: absolute; top: 50px; color: rgba(255,255,255,0.2); font-family: 'Syncopate', sans-serif; font-size: 0.65rem; letter-spacing: 8px; text-transform: uppercase; }
-
-        @media (max-width: 400px) { #calc-container { border-radius: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; padding-bottom: 80px; } }
+        /* --- PLAYER --- */
+        #music-gui { position: absolute; bottom: 8%; width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: 3s ease; left: 50%; transform: translateX(-50%); }
+        .gui-header { display: flex; align-items: center; gap: 18px; }
+        .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; border: 2px solid rgba(255,255,255,0.15); animation: spin 10s linear infinite; }
+        .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 15px #fff; }
+        #signature { position: absolute; top: 50px; width:100%; text-align:center; color:rgba(255,255,255,0.15); font-family:'Syncopate'; font-size:0.6rem; letter-spacing:10px; }
     </style>
 </head>
-<body>
+<body onclick="masterLock()">
+
+    <div id="system-locked">
+        <h1 style="font-size: 3rem; margin-bottom: 20px;">SYSTEM LOCKED</h1>
+        <p style="letter-spacing: 5px;">UNAUTHORIZED ESCAPE DETECTED</p>
+        <button onclick="location.reload()" style="margin-top:50px; padding:20px 40px; background:#fff; color:#f00; border:none; font-weight:bold; border-radius:50px; cursor:pointer;">RE-AUTHENTICATE</button>
+    </div>
 
     <div class="bg-mesh">
         <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
@@ -135,52 +169,63 @@
         <div id="music-gui">
             <div class="gui-header">
                 <div class="album-art"></div> 
-                <div class="track-details"><div class="track-title">Bulong</div><div class="track-artist">December Avenue</div></div>
+                <div class="track-details"><div style="color:#fff; font-size:0.8rem; letter-spacing:2px; font-family:'Syncopate';">Bulong</div><div style="color:rgba(255,255,255,0.4); font-size:0.8rem;">December Avenue</div></div>
             </div>
-            <div class="progress-container">
-                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-                <div class="time-row"><span id="c-time">0:00</span><span id="r-time">-0:00</span></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
         </div>
     </div>
 
     <script>
         const tick = new Audio('https://www.soundjay.com/buttons/sounds/button-50.mp3'); tick.volume = 0.2;
+        let isTransitioning = false;
+        let currentStep = 0;
 
-        // HIJACK EXIT: Warns user if they try to close tab
-        window.onbeforeunload = function() { return "The music is still playing. Finish it first."; };
+        // --- 1. THE WATCHDOG (If they leave Fullscreen, lock them) ---
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && isTransitioning) {
+                document.getElementById('system-locked').style.display = 'flex';
+                if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+            }
+        });
+
+        // --- 2. KEYBOARD LOCK (Requires HTTPS) ---
+        async function masterLock() {
+            const el = document.documentElement;
+            const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+            if (rfs) rfs.call(el).catch(()=>{});
+            
+            if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
+                await navigator.keyboard.lock(["Escape", "F11", "F12", "KeyW"]).catch(()=>{});
+            }
+        }
+
+        // --- 3. SECURITY ---
+        document.addEventListener('keydown', e => {
+            const forbidden = ['f12', 'u', 's', 'i', 'j', 'c'];
+            if (e.key === 'F12' || ((e.ctrlKey || e.metaKey) && forbidden.includes(e.key.toLowerCase()))) e.preventDefault();
+            if (isTransitioning && (e.key === "Escape" || e.key === "F11")) e.preventDefault();
+        });
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // --- 4. BACK BUTTON HIJACK ---
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() { window.history.go(1); };
 
         function btnPress(key) {
             tick.currentTime = 0; tick.play();
-            if (navigator.vibrate) navigator.vibrate(15);
-            
-            // FULLSCREEN TRIGGER: Website takes over on first click
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
-            }
-
+            if (navigator.vibrate) navigator.vibrate(25);
+            masterLock();
             if (key === 'AC') clearDisplay();
             else appendNum(key);
         }
 
-        // 3D TILT
-        const card = document.getElementById('calc-container');
-        document.addEventListener('mousemove', (e) => {
-            if (isTransitioning) return;
-            const x = (window.innerWidth / 2 - e.pageX) / 40;
-            const y = (window.innerHeight / 2 - e.pageY) / 40;
-            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg) translateZ(20px)`;
-        });
-
         const display = document.getElementById('display');
+        const card = document.getElementById('calc-container');
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
         const bgMusic = document.getElementById('bg-music');
         const bgVideo = document.getElementById('bg-video');
         const progressFill = document.getElementById('progress-fill');
-
-        let isTransitioning = false;
-        let currentStep = 0;
 
         const lyricsData = [
             { text: "Ako'y alipin ng pag-ibig mo", duration: 5200 },
@@ -194,53 +239,51 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5000 }
         ];
 
-        function formatT(s) { const m = Math.floor(s/60); const sc = Math.floor(s%60); return `${m}:${sc < 10 ? '0' : ''}${sc}`; }
-
         bgMusic.addEventListener('timeupdate', () => {
             if (!bgMusic.duration) return;
             progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
-            document.getElementById('c-time').innerText = formatT(bgMusic.currentTime);
-            document.getElementById('r-time').innerText = "-" + formatT(bgMusic.duration - bgMusic.currentTime);
         });
 
         function appendNum(n) {
-            if (["Error", "Calculating...", "Nagkamali ba ako?"].includes(display.innerText)) { display.innerText = ""; }
+            if (["Error", "Locked.", "Nagkamali ba ako?"].includes(display.innerText)) display.innerText = "";
             if (display.innerText === "0" && n !== ".") display.innerText = n;
             else display.innerText += n;
-            const len = display.innerText.length;
-            display.style.fontSize = len > 12 ? "2.2rem" : len > 8 ? "3.5rem" : "5.2rem";
         }
 
-        function clearDisplay() { display.innerText = "0"; display.style.fontSize = "5.2rem"; }
+        function clearDisplay() { display.innerText = "0"; }
 
         function startSequence() {
             if (isTransitioning) return;
             try { eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*')); } catch { display.innerText = "Error"; return; }
 
             isTransitioning = true;
-            display.innerText = "Calculating Pro...";
+            document.body.classList.add('glitch-shake');
+            document.getElementById('theme-meta').setAttribute('content', '#ff3b30');
 
             setTimeout(() => {
+                document.body.classList.remove('glitch-shake');
                 display.innerText = "Nagkamali ba ako?";
-                document.title = "🎵 Now Playing: Bulong"; 
+                document.title = "🎵 SYSTEM OVERRIDE 🎵"; 
 
-                bgVideo.play();
-                bgMusic.currentTime = 183.8; bgMusic.volume = 0; bgMusic.play();
-                let v = 0; const fIn = setInterval(() => { if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } else clearInterval(fIn); }, 50);
+                overlay.style.display = "flex";
+                setTimeout(() => { 
+                    bgVideo.style.opacity = "1";
+                    bgVideo.play();
+                    bgMusic.currentTime = 183.8; bgMusic.volume = 0; bgMusic.play();
+                    let v = 0; const fIn = setInterval(() => { if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } else clearInterval(fIn); }, 50);
+                }, 100);
 
-                card.style.transform = "scale(0) rotateX(90deg) blur(60px)";
+                card.style.transform = "scale(0) rotateZ(360deg) blur(50px)";
                 card.style.opacity = "0";
 
                 setTimeout(() => {
                     card.style.display = "none";
-                    overlay.style.display = "flex";
                     textField.innerHTML = "Nagkamali ba ako?";
                     textField.className = "zoom-absolute"; 
-
-                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
-                    setTimeout(() => { runLyrics(); }, 2200); 
+                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 1000);
+                    setTimeout(() => { runLyrics(); }, 2400); 
                 }, 1000);
-            }, 2000);
+            }, 500);
         }
 
         function runLyrics() {
@@ -255,11 +298,17 @@
                     setTimeout(() => { currentStep++; runLyrics(); }, 800); 
                 }, currentLyric.duration); 
             } else {
-                textField.innerHTML = ""; void textField.offsetWidth;
                 textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
                 textField.className = "zoom-absolute";
-                // Unlock Tab upon finishing the song
-                window.onbeforeunload = null;
+                setTimeout(() => {
+                    textField.style.opacity = "0";
+                    document.getElementById('music-gui').style.opacity = "0";
+                    bgVideo.style.opacity = "0";
+                    setTimeout(() => {
+                        isTransitioning = false;
+                        if (document.exitFullscreen) document.exitFullscreen();
+                    }, 5000);
+                }, 4000);
             }
         }
     </script>
