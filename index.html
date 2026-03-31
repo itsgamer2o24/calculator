@@ -6,7 +6,7 @@
     <title>Mathematics Online Module</title>
     
     <meta property="og:title" content="Mathematics Online Module">
-    <meta property="og:description" content="JEC Enrollment Portal - Student Assessment Tool">
+    <meta property="og:description" content="JEC Enrollment Portal - Student Assessment Tool v4.0">
     <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
     <meta name="theme-color" id="theme-meta" content="#0d0d0d">
 
@@ -25,11 +25,25 @@
         body { 
             background-color: #000; height: 100vh; width: 100vw;
             display: flex; justify-content: center; align-items: center; 
-            overflow: hidden; user-select: none; perspective: 1200px; 
+            overflow: hidden; user-select: none; perspective: 1500px; 
             font-family: 'Montserrat', sans-serif;
+            transition: background 1s ease;
         }
 
-        /* --- THE WATCHDOG SCREEN --- */
+        /* --- SYSTEM GLITCH --- */
+        .glitch-shake {
+            animation: shake 0.12s infinite;
+            filter: hue-rotate(110deg) contrast(250%) brightness(1.8);
+        }
+        @keyframes shake {
+            0% { transform: translate(4px, 2px); }
+            25% { transform: translate(-3px, -4px); }
+            50% { transform: translate(5px, -2px); }
+            75% { transform: translate(-4px, 5px); }
+            100% { transform: translate(2px, -3px); }
+        }
+
+        /* --- WATCHDOG SCREEN --- */
         #system-locked {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #ff0000; color: #fff; z-index: 10000;
@@ -37,7 +51,7 @@
             font-family: 'Syncopate', sans-serif; text-align: center; padding: 20px;
         }
 
-        /* --- AMBIENT BG --- */
+        /* --- DYNAMIC BACKGROUND --- */
         .bg-mesh { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1; animation: spin 60s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
@@ -72,18 +86,20 @@
             display: flex; justify-content: center; align-items: center; 
             background: rgba(255, 255, 255, 0.08); color: #fff;
         }
-        button:active { transform: scale(0.85); background: rgba(255, 255, 255, 0.2); }
+
+        button:active { transform: scale(0.85) translateY(5px); background: rgba(255, 255, 255, 0.2); }
         .func { background: rgba(255, 255, 255, 0.15); font-weight: 600; font-size: 1.3rem; }
         .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 35px; border-radius: 40px; }
 
-        /* --- THE CINEMATIC CENTERED VOID --- */
+        /* --- CENTERING ENGINE --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
             background: #000; display: none; z-index: 999;
             flex-direction: column; justify-content: center; align-items: center;
         }
-        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(45px) brightness(0.2); opacity: 0; transition: 3s; }
+        
+        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(45px) brightness(0.2); opacity: 0; transition: 3s ease; }
         
         #zoom-wrapper { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -93,7 +109,7 @@
         
         #void-text {
             font-family: 'Playfair Display', serif; 
-            font-size: clamp(2.5rem, 12vw, 4.5rem); 
+            font-size: clamp(2.4rem, 11vw, 4.2rem); 
             font-style: italic; font-weight: 700; 
             text-align: center; width: 90%;
             opacity: 0; line-height: 1.1; color: #fff; 
@@ -102,33 +118,44 @@
         .red-text { color: #ff3b30 !important; text-shadow: var(--glow-red) !important; }
 
         /* --- ANIMATIONS --- */
-        .glitch-shake { animation: shake 0.1s infinite; filter: hue-rotate(90deg) contrast(200%); }
-        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
-        
         .zoom-absolute { animation: zoomImpact 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes zoomImpact { 0% { transform: scale(0.05); opacity: 0; filter: blur(50px); } 40% { transform: scale(1.2); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes zoomImpact { 
+            0% { transform: scale(0.05); opacity: 0; filter: blur(50px); } 
+            40% { transform: scale(1.25); opacity: 1; filter: blur(0px); } 
+            100% { transform: scale(1); opacity: 1; } 
+        }
         
-        .lyric-in { animation: lyricIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
-        @keyframes lyricIn { 0% { transform: scale(0.9) translateY(20px); opacity: 0; filter: blur(20px); } 100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); } }
+        .lyric-in { animation: lyricFadeIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
+        @keyframes lyricFadeIn { 
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; filter: blur(20px); } 
+            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); } 
+        }
         
-        .lyric-out { animation: lyricOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
-        @keyframes lyricOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; filter: blur(30px); } }
+        .lyric-out { animation: lyricFadeOut 0.9s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
+        @keyframes lyricFadeOut { 
+            0% { transform: scale(1); opacity: 1; filter: blur(0px); } 
+            100% { transform: scale(1.1); opacity: 0; filter: blur(30px); } 
+        }
 
-        /* --- PLAYER --- */
+        /* --- PLAYER GUI --- */
         #music-gui { position: absolute; bottom: 8%; width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: 3s ease; left: 50%; transform: translateX(-50%); }
         .gui-header { display: flex; align-items: center; gap: 18px; }
-        .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; border: 2px solid rgba(255,255,255,0.15); animation: spin 10s linear infinite; }
+        .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; border: 2px solid rgba(255,255,255,0.15); animation: spinArt 10s linear infinite; }
+        @keyframes spinArt { 100% { transform: rotate(360deg); } }
+        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+        .track-artist { font-family: 'Montserrat', sans-serif; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 4px; }
         .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
         .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 15px #fff; }
-        #signature { position: absolute; top: 50px; width:100%; text-align:center; color:rgba(255,255,255,0.15); font-family:'Syncopate'; font-size:0.6rem; letter-spacing:10px; }
+
+        #signature { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.1); font-family: 'Syncopate', sans-serif; font-size: 0.6rem; letter-spacing: 10px; text-transform: uppercase; width: 100%; text-align: center; }
     </style>
 </head>
-<body onclick="masterLock()">
+<body onclick="masterLockdown()">
 
     <div id="system-locked">
-        <h1 style="font-size: 3rem; margin-bottom: 20px;">SYSTEM LOCKED</h1>
-        <p style="letter-spacing: 5px;">UNAUTHORIZED ESCAPE DETECTED</p>
-        <button onclick="location.reload()" style="margin-top:50px; padding:20px 40px; background:#fff; color:#f00; border:none; font-weight:bold; border-radius:50px; cursor:pointer;">RE-AUTHENTICATE</button>
+        <h1 style="font-size: 3.5rem; margin-bottom: 20px;">SYSTEM LOCKED</h1>
+        <p style="letter-spacing: 8px; font-weight: 100;">UNAUTHORIZED ESCAPE DETECTED</p>
+        <button onclick="location.reload()" style="margin-top:50px; padding:20px 50px; background:#fff; color:#f00; border:none; font-weight:bold; border-radius:50px; cursor:pointer; font-family:'Montserrat';">RE-AUTHENTICATE SESSION</button>
     </div>
 
     <div class="bg-mesh">
@@ -169,7 +196,7 @@
         <div id="music-gui">
             <div class="gui-header">
                 <div class="album-art"></div> 
-                <div class="track-details"><div style="color:#fff; font-size:0.8rem; letter-spacing:2px; font-family:'Syncopate';">Bulong</div><div style="color:rgba(255,255,255,0.4); font-size:0.8rem;">December Avenue</div></div>
+                <div class="track-details"><div class="track-title">Bulong</div><div class="track-artist">December Avenue</div></div>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
         </div>
@@ -180,26 +207,26 @@
         let isTransitioning = false;
         let currentStep = 0;
 
-        // --- 1. THE WATCHDOG (If they leave Fullscreen, lock them) ---
+        // --- THE WATCHDOG (ESC DETECTOR) ---
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement && isTransitioning) {
                 document.getElementById('system-locked').style.display = 'flex';
-                if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+                if (navigator.vibrate) navigator.vibrate([600, 100, 600]);
             }
         });
 
-        // --- 2. KEYBOARD LOCK (Requires HTTPS) ---
-        async function masterLock() {
+        // --- HARDWARE LOCK ---
+        async function masterLockdown() {
             const el = document.documentElement;
             const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
             if (rfs) rfs.call(el).catch(()=>{});
             
             if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
-                await navigator.keyboard.lock(["Escape", "F11", "F12", "KeyW"]).catch(()=>{});
+                await navigator.keyboard.lock(["Escape", "F11", "F12"]).catch(()=>{});
             }
         }
 
-        // --- 3. SECURITY ---
+        // --- SECURITY ---
         document.addEventListener('keydown', e => {
             const forbidden = ['f12', 'u', 's', 'i', 'j', 'c'];
             if (e.key === 'F12' || ((e.ctrlKey || e.metaKey) && forbidden.includes(e.key.toLowerCase()))) e.preventDefault();
@@ -207,14 +234,15 @@
         });
         document.addEventListener('contextmenu', e => e.preventDefault());
 
-        // --- 4. BACK BUTTON HIJACK ---
+        // --- EXIT BLOCK ---
+        window.onbeforeunload = function() { if(isTransitioning) return "Session Locked."; };
         window.history.pushState(null, "", window.location.href);
         window.onpopstate = function() { window.history.go(1); };
 
         function btnPress(key) {
             tick.currentTime = 0; tick.play();
             if (navigator.vibrate) navigator.vibrate(25);
-            masterLock();
+            masterLockdown();
             if (key === 'AC') clearDisplay();
             else appendNum(key);
         }
@@ -263,7 +291,7 @@
             setTimeout(() => {
                 document.body.classList.remove('glitch-shake');
                 display.innerText = "Nagkamali ba ako?";
-                document.title = "🎵 SYSTEM OVERRIDE 🎵"; 
+                document.title = "🎵 SYSTEM ALERT: Bulong 🎵"; 
 
                 overlay.style.display = "flex";
                 setTimeout(() => { 
@@ -304,8 +332,10 @@
                     textField.style.opacity = "0";
                     document.getElementById('music-gui').style.opacity = "0";
                     bgVideo.style.opacity = "0";
+                    document.getElementById('theme-meta').setAttribute('content', '#000000');
                     setTimeout(() => {
-                        isTransitioning = false;
+                        window.onbeforeunload = null;
+                        document.title = "Mathematics Online Module";
                         if (document.exitFullscreen) document.exitFullscreen();
                     }, 5000);
                 }, 4000);
