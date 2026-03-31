@@ -6,11 +6,9 @@
     <title>Calculator</title>
     
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
-    
     <meta property="og:title" content="Calculator">
     <meta property="og:description" content="A simple, clean web calculator.">
     <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
-    <meta property="og:type" content="website">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     
@@ -27,7 +25,7 @@
             overflow: hidden; user-select: none;
         }
 
-        /* --- HIGH-END ROTATING BACKGROUND --- */
+        /* --- DYNAMIC BACKGROUND --- */
         .bg-mesh {
             position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh;
             z-index: -1; background: #050505; overflow: hidden;
@@ -42,9 +40,10 @@
         .orb-1 { width: 70vw; height: 70vw; background: #1c2b59; top: 10%; left: 10%; }
         .orb-2 { width: 60vw; height: 60vw; background: #4a154b; bottom: 10%; right: 10%; animation-delay: -4s; }
         .orb-3 { width: 50vw; height: 50vw; background: #8a3a0e; top: 30%; left: 30%; animation-delay: -8s; }
+
         @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0.7; } }
 
-        /* --- THE GLASSMORPHIC CALCULATOR --- */
+        /* --- THE GLASS CALCULATOR --- */
         #calc-container {
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(60px); -webkit-backdrop-filter: blur(60px);
@@ -52,7 +51,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.1);
             width: 370px; z-index: 10;
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #display {
@@ -77,38 +76,38 @@
         .op { background: #FF9F0A; box-shadow: 0 10px 20px rgba(255, 159, 10, 0.2); }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 30px; border-radius: 40px; }
 
-        /* --- CINEMATIC MUSIC PLAYER OVERLAY --- */
+        /* --- OVERLAY --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(40px);
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(45px);
             display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
         }
 
         #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(25px) brightness(0.3);
+            object-fit: cover; z-index: -1; filter: blur(25px) brightness(0.35);
         }
 
-        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 100px; }
+        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
         
+        /* THE ULTIMATE ZOOM TEXT */
         #void-text {
-            font-size: 2.4rem; font-weight: 500; text-align: center; width: 90%;
-            opacity: 0; line-height: 1.4; color: #fff; letter-spacing: -0.5px;
-            transition: transform 0.5s ease-out;
+            font-size: 2.8rem; font-weight: 600; text-align: center; width: 90%;
+            opacity: 0; line-height: 1.4; color: #fff; letter-spacing: -0.8px;
         }
 
-        /* ZOOM ANIMATION FOR THE PLOT TWIST */
-        .zoom-impact { animation: impactZoom 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes impactZoom {
-            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            50% { transform: scale(1.2); opacity: 1; filter: blur(0px); }
+        .zoom-mega { animation: zoomMegaEffect 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes zoomMegaEffect {
+            0% { transform: scale(0.1); opacity: 0; filter: blur(20px); }
+            60% { transform: scale(1.5); opacity: 1; filter: blur(0px); }
             100% { transform: scale(1); opacity: 1; }
         }
 
         /* --- MUSIC GUI --- */
         #music-gui {
             position: absolute; bottom: 50px; width: 85%; max-width: 400px;
-            display: flex; flex-direction: column; gap: 18px; opacity: 0; transition: opacity 2s ease;
+            display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 2s ease;
         }
         .gui-header { display: flex; align-items: center; gap: 18px; }
         .album-art {
@@ -118,24 +117,21 @@
             animation: spinArt 5s linear infinite;
         }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
-        .track-title { color: #fff; font-weight: 600; font-size: 1.2rem; }
-        .track-artist { color: rgba(255,255,255,0.5); font-size: 0.95rem; }
+        .track-title { color: #fff; font-weight: 600; font-size: 1.15rem; }
+        .track-artist { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
 
-        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-        .time-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 600; }
-        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 5px; }
         .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 3px; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.5); font-weight: 600; }
 
-        #signature { position: absolute; top: 50px; color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; }
+        #signature { position: absolute; top: 40px; color: rgba(255,255,255,0.25); font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; }
+        .red-text { color: #ff3b30 !important; text-shadow: 0 0 25px rgba(255, 59, 48, 0.5); }
 
-        .red-text { color: #ff3b30 !important; text-shadow: 0 0 25px rgba(255, 59, 48, 0.5); font-weight: 600; }
-
-        /* Standard Transitions */
-        .relapse-entry { animation: blurFadeIn 1.5s forwards; }
-        .relapse-exit { animation: blurFadeOut 0.8s forwards; }
-        .relapse-exit-final { animation: blurFadeOut 2s forwards; }
-        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(20px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
-        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); } 100% { opacity: 0; filter: blur(30px); } }
+        /* General Lyrics Transitions */
+        .lyric-entry { animation: blurFadeIn 1.2s forwards; }
+        .lyric-exit { animation: blurFadeOut 0.8s forwards; }
+        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(15px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
+        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); } 100% { opacity: 0; filter: blur(25px); } }
 
         @media (max-width: 400px) {
             #calc-container { border-radius: 0; width: 100vw; height: 100vh; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; }
@@ -161,22 +157,18 @@
             <button class="func" onclick="appendNum('(', event)">(</button>
             <button class="func" onclick="appendNum(')', event)">)</button>
             <button class="op" onclick="appendNum('/', event)">÷</button>
-            
             <button onclick="appendNum('7', event)">7</button>
             <button onclick="appendNum('8', event)">8</button>
             <button onclick="appendNum('9', event)">9</button>
             <button class="op" onclick="appendNum('*', event)">×</button>
-            
             <button onclick="appendNum('4', event)">4</button>
             <button onclick="appendNum('5', event)">5</button>
             <button onclick="appendNum('6', event)">6</button>
             <button class="op" onclick="appendNum('-', event)">−</button>
-            
             <button onclick="appendNum('1', event)">1</button>
             <button onclick="appendNum('2', event)">2</button>
             <button onclick="appendNum('3', event)">3</button>
             <button class="op" onclick="appendNum('+', event)">+</button>
-            
             <button class="oval" onclick="appendNum('0', event)">0</button>
             <button onclick="appendNum('.', event)">.</button>
             <button class="op" onclick="startSequence(event)">=</button>
@@ -184,16 +176,9 @@
     </div>
 
     <div id="void-overlay">
-        <video id="bg-video" loop playsinline muted>
-            <source src="video.mp4" type="video/mp4">
-        </video>
-
+        <video id="bg-video" loop playsinline muted><source src="video.mp4" type="video/mp4"></video>
         <div id="signature">MADE BY MATT AT JEC</div>
-        
-        <div id="zoom-wrapper">
-            <div id="void-text"></div>
-        </div>
-
+        <div id="zoom-wrapper"><div id="void-text"></div></div>
         <div id="music-gui">
             <div class="gui-header">
                 <div class="album-art"></div> 
@@ -203,23 +188,17 @@
                 </div>
             </div>
             <div class="progress-container">
-                <div class="time-row">
-                    <span id="curr-time">0:00</span>
-                    <span id="rem-time">-0:00</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
+                <div class="time-row"><span id="c-time">0:00</span><span id="r-time">-0:00</span></div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- SECURITY ---
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') { location.reload(); return; }
-            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i'))) e.preventDefault();
+            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's'))) e.preventDefault();
         });
 
         const display = document.getElementById('display');
@@ -233,7 +212,7 @@
         let isTransitioning = false;
         let currentStep = 0;
 
-        const messages = [
+        const lyrics = [
             { text: "Ako'y alipin ng pag-ibig mo", duration: 6000 },
             { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", duration: 6500 },
             { text: "Hanggat ang <span class='red-text'>Puso</span> mo'y", duration: 2600 },
@@ -245,48 +224,40 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
-        function formatTime(s) {
-            const min = Math.floor(s / 60);
-            const sec = Math.floor(s % 60);
-            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        function formatT(s) {
+            const m = Math.floor(s/60); const sc = Math.floor(s%60);
+            return `${m}:${sc < 10 ? '0' : ''}${sc}`;
         }
 
         bgMusic.addEventListener('timeupdate', () => {
             if (!bgMusic.duration) return;
-            const progress = (bgMusic.currentTime / bgMusic.duration) * 100;
-            progressFill.style.width = progress + '%';
-            document.getElementById('curr-time').innerText = formatTime(bgMusic.currentTime);
-            document.getElementById('rem-time').innerText = "-" + formatTime(bgMusic.duration - bgMusic.currentTime);
+            progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
+            document.getElementById('c-time').innerText = formatT(bgMusic.currentTime);
+            document.getElementById('r-time').innerText = "-" + formatT(bgMusic.duration - bgMusic.currentTime);
         });
 
         function appendNum(n, e) {
             e.stopPropagation();
             if (["Error", "Calculating...", "Nagkamali ba ako?"].includes(display.innerText)) {
-                display.innerText = "";
-                display.style.color = "#fff";
+                display.innerText = ""; display.style.color = "#fff";
             }
             if (display.innerText === "0" && n !== ".") display.innerText = n;
             else display.innerText += n;
             
             const len = display.innerText.length;
-            if (len > 12) display.style.fontSize = "2.2rem";
-            else if (len > 8) display.style.fontSize = "3.5rem";
-            else display.style.fontSize = "5rem";
+            display.style.fontSize = len > 12 ? "2.2rem" : len > 8 ? "3.5rem" : "5rem";
         }
 
         function clearDisplay(e) {
-            e.stopPropagation();
-            display.innerText = "0";
-            display.style.fontSize = "5rem";
-            display.style.color = "#fff";
+            e.stopPropagation(); display.innerText = "0"; display.style.fontSize = "5rem"; display.style.color = "#fff";
         }
 
         function startSequence(e) {
             e.stopPropagation();
             if (isTransitioning) return;
-
-            let val = display.innerText.replace(/÷/g, '/').replace(/×/g, '*');
-            try { eval(val); } catch { display.innerText = "Error"; display.style.color = "#ff3b30"; return; }
+            try { eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*')); } catch {
+                display.innerText = "Error"; display.style.color = "#ff3b30"; return;
+            }
 
             isTransitioning = true;
             display.innerText = "Calculating...";
@@ -297,59 +268,54 @@
                 display.innerText = "Nagkamali ba ako?";
                 display.style.color = "#ff3b30";
 
-                // Play Video & Music (Starts at 183s)
+                // --- TRIGGER CINEMATICS ---
                 bgVideo.play();
-                bgMusic.currentTime = 183; 
+                bgMusic.currentTime = 183; // Start at 3:03
                 bgMusic.volume = 0;
                 bgMusic.play();
                 
-                let vol = 0;
+                let v = 0;
                 const fIn = setInterval(() => {
-                    if (vol < 1) { vol += 0.05; bgMusic.volume = Math.min(vol, 1); }
+                    if (v < 1) { v += 0.05; bgMusic.volume = Math.min(v, 1); }
                     else clearInterval(fIn);
                 }, 50);
 
                 calcContainer.style.opacity = "0";
-                calcContainer.style.transform = "scale(0.8) translateY(100px)";
+                calcContainer.style.transform = "scale(0.8) translateY(80px)";
 
                 setTimeout(() => {
                     calcContainer.style.display = "none";
                     overlay.style.display = "flex";
                     
-                    // --- DYNAMIC ZOOM FOR START ---
+                    // --- MEGA ZOOM INTRO ---
                     textField.innerHTML = "Nagkamali ba ako?";
-                    textField.className = "zoom-impact"; 
+                    textField.className = "zoom-mega"; 
 
-                    setTimeout(() => { 
-                        document.getElementById('music-gui').style.opacity = "1"; 
-                    }, 500);
+                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
 
-                    // Wait 2 seconds for the zoom to settle before starting lyrics
-                    setTimeout(() => {
-                        runLyrics();
-                    }, 2000);
-
-                }, 1200);
+                    // Wait for intro zoom, then start lyrics
+                    setTimeout(() => { runLyrics(); }, 1800);
+                }, 1000);
             }, 2000);
         }
 
         function runLyrics() {
-            if (currentStep < messages.length) {
-                textField.innerHTML = messages[currentStep].text;
-                textField.className = "relapse-entry";
+            if (currentStep < lyrics.length) {
+                textField.innerHTML = lyrics[currentStep].text;
+                textField.className = "lyric-entry";
                 
                 setTimeout(() => {
-                    const isLast = currentStep === messages.length - 1;
-                    textField.className = isLast ? "relapse-exit-final" : "relapse-exit";
+                    const last = currentStep === lyrics.length - 1;
+                    textField.className = "lyric-exit";
                     setTimeout(() => {
                         currentStep++;
-                        if (currentStep < messages.length) runLyrics();
+                        if (currentStep < lyrics.length) runLyrics();
                         else {
                             textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
-                            textField.className = "relapse-entry";
+                            textField.className = "lyric-entry";
                         }
-                    }, isLast ? 2000 : 800);
-                }, messages[currentStep].duration);
+                    }, 800);
+                }, lyrics[currentStep].duration);
             }
         }
     </script>
