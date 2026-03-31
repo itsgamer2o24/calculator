@@ -40,7 +40,6 @@
         .orb-1 { width: 70vw; height: 70vw; background: #1c2b59; top: 10%; left: 10%; }
         .orb-2 { width: 60vw; height: 60vw; background: #4a154b; bottom: 10%; right: 10%; animation-delay: -4s; }
         .orb-3 { width: 50vw; height: 50vw; background: #8a3a0e; top: 30%; left: 30%; animation-delay: -8s; }
-
         @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0.7; } }
 
         /* --- THE GLASS CALCULATOR --- */
@@ -76,7 +75,7 @@
         .op { background: #FF9F0A; box-shadow: 0 10px 20px rgba(255, 159, 10, 0.2); }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 30px; border-radius: 40px; }
 
-        /* --- OVERLAY --- */
+        /* --- CINEMATIC OVERLAY --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(45px);
@@ -90,18 +89,33 @@
 
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
         
-        /* THE ULTIMATE ZOOM TEXT */
         #void-text {
             font-size: 2.8rem; font-weight: 600; text-align: center; width: 90%;
             opacity: 0; line-height: 1.4; color: #fff; letter-spacing: -0.8px;
         }
 
-        .zoom-mega { animation: zoomMegaEffect 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
+        /* --- ADVANCED ANIMATIONS --- */
+        
+        /* 1. The Big Intro Zoom */
+        .zoom-mega { animation: zoomMegaEffect 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes zoomMegaEffect {
-            0% { transform: scale(0.1); opacity: 0; filter: blur(20px); }
-            60% { transform: scale(1.5); opacity: 1; filter: blur(0px); }
+            0% { transform: scale(0.1); opacity: 0; filter: blur(30px); }
+            50% { transform: scale(1.3); opacity: 1; filter: blur(0px); }
             100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 2. Lyric Entrance (Rise + Fade + Blur) */
+        .lyric-entry { animation: lyricIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes lyricIn {
+            0% { transform: translateY(30px) scale(0.95); opacity: 0; filter: blur(15px); }
+            100% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0px); }
+        }
+
+        /* 3. Lyric Exit (Zoom Out + Fade + Blur) */
+        .lyric-exit { animation: lyricOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+        @keyframes lyricOut {
+            0% { transform: scale(1); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1.1); opacity: 0; filter: blur(20px); }
         }
 
         /* --- MUSIC GUI --- */
@@ -126,12 +140,6 @@
 
         #signature { position: absolute; top: 40px; color: rgba(255,255,255,0.25); font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; }
         .red-text { color: #ff3b30 !important; text-shadow: 0 0 25px rgba(255, 59, 48, 0.5); }
-
-        /* General Lyrics Transitions */
-        .lyric-entry { animation: blurFadeIn 1.2s forwards; }
-        .lyric-exit { animation: blurFadeOut 0.8s forwards; }
-        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(15px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
-        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); } 100% { opacity: 0; filter: blur(25px); } }
 
         @media (max-width: 400px) {
             #calc-container { border-radius: 0; width: 100vw; height: 100vh; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; }
@@ -268,9 +276,8 @@
                 display.innerText = "Nagkamali ba ako?";
                 display.style.color = "#ff3b30";
 
-                // --- TRIGGER CINEMATICS ---
                 bgVideo.play();
-                bgMusic.currentTime = 183; // Start at 3:03
+                bgMusic.currentTime = 183; // 3:03 skip
                 bgMusic.volume = 0;
                 bgMusic.play();
                 
@@ -287,13 +294,13 @@
                     calcContainer.style.display = "none";
                     overlay.style.display = "flex";
                     
-                    // --- MEGA ZOOM INTRO ---
+                    // MEGA INTRO ZOOM
                     textField.innerHTML = "Nagkamali ba ako?";
                     textField.className = "zoom-mega"; 
 
                     setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
 
-                    // Wait for intro zoom, then start lyrics
+                    // Start the floating lyric cycle after the big zoom
                     setTimeout(() => { runLyrics(); }, 1800);
                 }, 1000);
             }, 2000);
@@ -305,14 +312,13 @@
                 textField.className = "lyric-entry";
                 
                 setTimeout(() => {
-                    const last = currentStep === lyrics.length - 1;
                     textField.className = "lyric-exit";
                     setTimeout(() => {
                         currentStep++;
                         if (currentStep < lyrics.length) runLyrics();
                         else {
                             textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
-                            textField.className = "lyric-entry";
+                            textField.className = "zoom-mega"; 
                         }
                     }, 800);
                 }, lyrics[currentStep].duration);
