@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
+    
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
+    
+    <meta property="og:title" content="Calculator">
+    <meta property="og:description" content="A simple, clean web calculator.">
+    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
+    <meta property="og:type" content="website">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0; padding: 0; box-sizing: border-box;
@@ -24,18 +33,15 @@
             z-index: -1; background: #050505; overflow: hidden;
             animation: spinMesh 45s linear infinite;
         }
-
         @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .orb {
             position: absolute; border-radius: 50%; filter: blur(100px); 
             opacity: 0.5; animation: pulseOrb 12s infinite alternate ease-in-out;
         }
-
         .orb-1 { width: 70vw; height: 70vw; background: #1c2b59; top: 10%; left: 10%; }
         .orb-2 { width: 60vw; height: 60vw; background: #4a154b; bottom: 10%; right: 10%; animation-delay: -4s; }
         .orb-3 { width: 50vw; height: 50vw; background: #8a3a0e; top: 30%; left: 30%; animation-delay: -8s; }
-
         @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0.7; } }
 
         /* --- THE GLASSMORPHIC CALCULATOR --- */
@@ -46,7 +52,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.1);
             width: 370px; z-index: 10;
-            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #display {
@@ -59,7 +65,6 @@
         }
 
         .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-
         button {
             border: none; height: 72px; width: 100%; border-radius: 36px;
             font-size: 1.8rem; font-weight: 400; cursor: pointer;
@@ -67,31 +72,37 @@
             display: flex; justify-content: center; align-items: center;
             background: rgba(255, 255, 255, 0.08); color: #fff;
         }
-
         button:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.2); }
-
         .func { background: rgba(255, 255, 255, 0.15); font-size: 1.5rem; font-weight: 500; }
         .op { background: #FF9F0A; box-shadow: 0 10px 20px rgba(255, 159, 10, 0.2); }
-        .op:active { background: #e08a00; }
-
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 30px; border-radius: 40px; }
 
         /* --- CINEMATIC MUSIC PLAYER OVERLAY --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(40px);
+            background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(40px);
             display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
         }
 
         #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(20px) brightness(0.4);
+            object-fit: cover; z-index: -1; filter: blur(25px) brightness(0.3);
         }
 
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 100px; }
+        
         #void-text {
             font-size: 2.4rem; font-weight: 500; text-align: center; width: 90%;
             opacity: 0; line-height: 1.4; color: #fff; letter-spacing: -0.5px;
+            transition: transform 0.5s ease-out;
+        }
+
+        /* ZOOM ANIMATION FOR THE PLOT TWIST */
+        .zoom-impact { animation: impactZoom 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes impactZoom {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.2); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         /* --- MUSIC GUI --- */
@@ -99,7 +110,6 @@
             position: absolute; bottom: 50px; width: 85%; max-width: 400px;
             display: flex; flex-direction: column; gap: 18px; opacity: 0; transition: opacity 2s ease;
         }
-
         .gui-header { display: flex; align-items: center; gap: 18px; }
         .album-art {
             width: 60px; height: 60px; border-radius: 50%;
@@ -108,7 +118,6 @@
             animation: spinArt 5s linear infinite;
         }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
-
         .track-title { color: #fff; font-weight: 600; font-size: 1.2rem; }
         .track-artist { color: rgba(255,255,255,0.5); font-size: 0.95rem; }
 
@@ -121,7 +130,7 @@
 
         .red-text { color: #ff3b30 !important; text-shadow: 0 0 25px rgba(255, 59, 48, 0.5); font-weight: 600; }
 
-        /* Transitions */
+        /* Standard Transitions */
         .relapse-entry { animation: blurFadeIn 1.5s forwards; }
         .relapse-exit { animation: blurFadeOut 0.8s forwards; }
         .relapse-exit-final { animation: blurFadeOut 2s forwards; }
@@ -259,7 +268,6 @@
             if (display.innerText === "0" && n !== ".") display.innerText = n;
             else display.innerText += n;
             
-            // Auto-shrink text
             const len = display.innerText.length;
             if (len > 12) display.style.fontSize = "2.2rem";
             else if (len > 8) display.style.fontSize = "3.5rem";
@@ -278,13 +286,7 @@
             if (isTransitioning) return;
 
             let val = display.innerText.replace(/÷/g, '/').replace(/×/g, '*');
-            try {
-                eval(val);
-            } catch {
-                display.innerText = "Error";
-                display.style.color = "#ff3b30";
-                return;
-            }
+            try { eval(val); } catch { display.innerText = "Error"; display.style.color = "#ff3b30"; return; }
 
             isTransitioning = true;
             display.innerText = "Calculating...";
@@ -295,7 +297,7 @@
                 display.innerText = "Nagkamali ba ako?";
                 display.style.color = "#ff3b30";
 
-                // Play Video & Music (Starts at 183 seconds as requested!)
+                // Play Video & Music (Starts at 183s)
                 bgVideo.play();
                 bgMusic.currentTime = 183; 
                 bgMusic.volume = 0;
@@ -313,9 +315,21 @@
                 setTimeout(() => {
                     calcContainer.style.display = "none";
                     overlay.style.display = "flex";
-                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
-                    runLyrics();
-                }, 1500);
+                    
+                    // --- DYNAMIC ZOOM FOR START ---
+                    textField.innerHTML = "Nagkamali ba ako?";
+                    textField.className = "zoom-impact"; 
+
+                    setTimeout(() => { 
+                        document.getElementById('music-gui').style.opacity = "1"; 
+                    }, 500);
+
+                    // Wait 2 seconds for the zoom to settle before starting lyrics
+                    setTimeout(() => {
+                        runLyrics();
+                    }, 2000);
+
+                }, 1200);
             }, 2000);
         }
 
