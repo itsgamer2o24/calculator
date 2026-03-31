@@ -7,134 +7,129 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            -webkit-tap-highlight-color: transparent; outline: none;
         }
 
         body {
-            background-color: #050505;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            user-select: none;
+            background-color: #050505; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; user-select: none;
         }
 
-        /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
+        /* --- HIGH-END ROTATING BACKGROUND --- */
         .bg-mesh {
             position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh;
             z-index: -1; background: #050505; overflow: hidden;
-            animation: spinMesh 40s linear infinite;
+            animation: spinMesh 45s linear infinite;
         }
 
         @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; animation: pulseOrb 10s infinite alternate; }
+        .orb {
+            position: absolute; border-radius: 50%; filter: blur(100px); 
+            opacity: 0.5; animation: pulseOrb 12s infinite alternate ease-in-out;
+        }
 
-        .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: 20%; left: 20%; }
-        .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: 20%; right: 20%; animation-delay: -3s; }
-        .orb-3 { width: 45vw; height: 45vw; background: #8a3a0e; top: 40%; left: 40%; animation-delay: -6s; }
+        .orb-1 { width: 70vw; height: 70vw; background: #1c2b59; top: 10%; left: 10%; }
+        .orb-2 { width: 60vw; height: 60vw; background: #4a154b; bottom: 10%; right: 10%; animation-delay: -4s; }
+        .orb-3 { width: 50vw; height: 50vw; background: #8a3a0e; top: 30%; left: 30%; animation-delay: -8s; }
 
-        @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.2); opacity: 0.8; } }
+        @keyframes pulseOrb { 0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.3); opacity: 0.7; } }
 
-        /* --- THE GLASS CALCULATOR --- */
+        /* --- THE GLASSMORPHIC CALCULATOR --- */
         #calc-container {
-            background: rgba(20, 20, 25, 0.4); 
-            backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px);
-            padding: 35px 22px 40px 22px; border-radius: 48px; border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.5);
-            width: 360px;
-            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease; 
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(60px); -webkit-backdrop-filter: blur(60px);
+            padding: 40px 25px; border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.1);
+            width: 370px; z-index: 10;
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #display {
-            width: 100%; height: 110px; color: #ffffff; font-size: 4.8rem; font-weight: 200; text-align: right;
-            padding: 0 10px; margin-bottom: 20px; display: flex; align-items: flex-end; justify-content: flex-end;
-            overflow: hidden; letter-spacing: -2px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); white-space: nowrap;
-            transition: font-size 0.2s ease; 
+            width: 100%; height: 120px; color: #fff;
+            font-size: 5rem; font-weight: 200; text-align: right;
+            padding: 0 10px; margin-bottom: 25px;
+            display: flex; align-items: flex-end; justify-content: flex-end;
+            overflow: hidden; letter-spacing: -3px;
+            transition: font-size 0.2s ease; white-space: nowrap;
         }
 
-        .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-        button { border: none; height: 72px; width: 100%; border-radius: 36px; font-size: 1.8rem; font-weight: 400; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08); color: #eeeeee; border: 1px solid rgba(255, 255, 255, 0.03); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        button:active { transform: scale(0.92); background: rgba(255, 255, 255, 0.2); }
-        .func { background: rgba(255, 255, 255, 0.15); color: #ffffff; font-size: 1.5rem; font-weight: 500; }
-        .func:active { background: rgba(255, 255, 255, 0.3); }
-        .op { background: #FF9F0A; color: #fff; font-size: 2.2rem; font-weight: 500; border: 1px solid rgba(255, 159, 10, 0.5); box-shadow: 0 8px 20px rgba(255, 159, 10, 0.3); }
-        .op:active { background: #d98505; box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2); }
-        .oval { grid-column: span 2; width: 100%; border-radius: 36px; justify-content: flex-start; padding-left: 28px; }
+        .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
 
-        /* --- CINEMATIC MUSIC OVERLAY WITH BLURRED VIDEO --- */
+        button {
+            border: none; height: 72px; width: 100%; border-radius: 36px;
+            font-size: 1.8rem; font-weight: 400; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.08); color: #fff;
+        }
+
+        button:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.2); }
+
+        .func { background: rgba(255, 255, 255, 0.15); font-size: 1.5rem; font-weight: 500; }
+        .op { background: #FF9F0A; box-shadow: 0 10px 20px rgba(255, 159, 10, 0.2); }
+        .op:active { background: #e08a00; }
+
+        .oval { grid-column: span 2; justify-content: flex-start; padding-left: 30px; border-radius: 40px; }
+
+        /* --- CINEMATIC MUSIC PLAYER OVERLAY --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5); display: none; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 999;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(40px);
+            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
         }
 
         #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(15px) brightness(0.4); 
+            object-fit: cover; z-index: -1; filter: blur(20px) brightness(0.4);
         }
 
-        .no-click { pointer-events: none; }
-        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; z-index: 2; }
-        #void-text { font-size: 2.2rem; font-weight: 500; text-align: center; width: 90%; opacity: 0; line-height: 1.4; color: #ffffff; display: inline-block; letter-spacing: -0.5px; }
+        #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 100px; }
+        #void-text {
+            font-size: 2.4rem; font-weight: 500; text-align: center; width: 90%;
+            opacity: 0; line-height: 1.4; color: #fff; letter-spacing: -0.5px;
+        }
 
-        /* --- MUSIC PLAYER GUI WITH TIMESTAMPS --- */
+        /* --- MUSIC GUI --- */
         #music-gui {
-            position: absolute; bottom: 40px; width: 85%; max-width: 400px;
-            display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 2s ease; z-index: 2;
+            position: absolute; bottom: 50px; width: 85%; max-width: 400px;
+            display: flex; flex-direction: column; gap: 18px; opacity: 0; transition: opacity 2s ease;
         }
 
-        .gui-header { display: flex; align-items: center; gap: 15px; }
+        .gui-header { display: flex; align-items: center; gap: 18px; }
         .album-art {
-            width: 55px; height: 55px; border-radius: 50%;
+            width: 60px; height: 60px; border-radius: 50%;
             background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); border: 2px solid rgba(255,255,255,0.1);
-            animation: spinArt 4s linear infinite;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid rgba(255,255,255,0.1);
+            animation: spinArt 5s linear infinite;
         }
-        .album-art::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 12px; height: 12px; background: #000; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-        }
-
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
 
-        .track-details { display: flex; flex-direction: column; }
-        .track-title { color: #fff; font-weight: 600; font-size: 1.1rem; letter-spacing: 0.5px; }
-        .track-artist { color: #a0a0ab; font-size: 0.9rem; font-weight: 400; }
+        .track-title { color: #fff; font-weight: 600; font-size: 1.2rem; }
+        .track-artist { color: rgba(255,255,255,0.5); font-size: 0.95rem; }
 
-        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 6px; }
-        .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a0a0ab; font-weight: 500; }
-        .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.1s linear;}
-        
-        #creator-name { 
-            position: absolute; top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; 
-            font-weight: 500; letter-spacing: 3px; text-transform: uppercase; z-index: 2;
-        }
+        .progress-container { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+        .time-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 600; }
+        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 3px; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
 
-        .red-text { color: #ff3b30 !important; text-shadow: 0 0 20px rgba(255, 59, 48, 0.4); font-weight: 600; }
+        #signature { position: absolute; top: 50px; color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; }
 
-        /* Animations */
-        .zoom-layer { animation: continuousZoom 15s linear forwards; }
-        .relapse-entry { animation: blurFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .relapse-exit { animation: blurFadeOut 0.6s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
-        .relapse-exit-final { animation: blurFadeOut 1.5s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
-        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(20px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
-        @keyframes continuousZoom { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
-        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); transform: scale(1); } 100% { opacity: 0; filter: blur(20px); transform: scale(1.05); } }
-        .plot-twist-fade-in { animation: simpleFadeIn 4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes simpleFadeIn { 0% { opacity: 0; transform: scale(0.9); filter: blur(10px); } 100% { opacity: 1; transform: scale(1); filter: blur(0px); } }
+        .red-text { color: #ff3b30 !important; text-shadow: 0 0 25px rgba(255, 59, 48, 0.5); font-weight: 600; }
+
+        /* Transitions */
+        .relapse-entry { animation: blurFadeIn 1.5s forwards; }
+        .relapse-exit { animation: blurFadeOut 0.8s forwards; }
+        .relapse-exit-final { animation: blurFadeOut 2s forwards; }
+        @keyframes blurFadeIn { 0% { opacity: 0; filter: blur(20px); transform: scale(0.9); } 100% { opacity: 1; filter: blur(0px); transform: scale(1); } }
+        @keyframes blurFadeOut { 0% { opacity: 1; filter: blur(0px); } 100% { opacity: 0; filter: blur(30px); } }
 
         @media (max-width: 400px) {
-            #calc-container { box-shadow: none; width: 100vw; height: 100vh; border-radius: 0; border: none; padding: 40px 20px 50px 20px; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
-            #display { font-size: 5.5rem; margin-bottom: 30px;}
+            #calc-container { border-radius: 0; width: 100vw; height: 100vh; padding-bottom: 60px; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; }
         }
     </style>
 </head>
@@ -158,23 +153,23 @@
             <button class="func" onclick="appendNum(')', event)">)</button>
             <button class="op" onclick="appendNum('/', event)">÷</button>
             
-            <button class="num" onclick="appendNum('7', event)">7</button>
-            <button class="num" onclick="appendNum('8', event)">8</button>
-            <button class="num" onclick="appendNum('9', event)">9</button>
+            <button onclick="appendNum('7', event)">7</button>
+            <button onclick="appendNum('8', event)">8</button>
+            <button onclick="appendNum('9', event)">9</button>
             <button class="op" onclick="appendNum('*', event)">×</button>
             
-            <button class="num" onclick="appendNum('4', event)">4</button>
-            <button class="num" onclick="appendNum('5', event)">5</button>
-            <button class="num" onclick="appendNum('6', event)">6</button>
+            <button onclick="appendNum('4', event)">4</button>
+            <button onclick="appendNum('5', event)">5</button>
+            <button onclick="appendNum('6', event)">6</button>
             <button class="op" onclick="appendNum('-', event)">−</button>
             
-            <button class="num" onclick="appendNum('1', event)">1</button>
-            <button class="num" onclick="appendNum('2', event)">2</button>
-            <button class="num" onclick="appendNum('3', event)">3</button>
+            <button onclick="appendNum('1', event)">1</button>
+            <button onclick="appendNum('2', event)">2</button>
+            <button onclick="appendNum('3', event)">3</button>
             <button class="op" onclick="appendNum('+', event)">+</button>
             
-            <button class="num oval" onclick="appendNum('0', event)">0</button>
-            <button class="num" onclick="appendNum('.', event)">.</button>
+            <button class="oval" onclick="appendNum('0', event)">0</button>
+            <button onclick="appendNum('.', event)">.</button>
             <button class="op" onclick="startSequence(event)">=</button>
         </div>
     </div>
@@ -184,7 +179,7 @@
             <source src="video.mp4" type="video/mp4">
         </video>
 
-        <div id="creator-name">MADE BY MATT AT JEC</div>
+        <div id="signature">MADE BY MATT AT JEC</div>
         
         <div id="zoom-wrapper">
             <div id="void-text"></div>
@@ -200,8 +195,8 @@
             </div>
             <div class="progress-container">
                 <div class="time-row">
-                    <span id="current-time">0:00</span>
-                    <span id="remaining-time">-0:00</span>
+                    <span id="curr-time">0:00</span>
+                    <span id="rem-time">-0:00</span>
                 </div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="progress-fill"></div>
@@ -211,36 +206,23 @@
     </div>
 
     <script>
-        // --- SECURITY WALL ---
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function(e) {
+        // --- SECURITY ---
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'j') { location.reload(); return; }
-            if (e.key === 'F12' || e.keyCode === 123) { e.preventDefault(); return; }
-            if (e.ctrlKey || e.metaKey) {
-                const k = e.key.toLowerCase();
-                if (k === 'u' || k === 's' || k === 'p' || (e.shiftKey && k === 'i') || (e.shiftKey && k === 'c')) {
-                    e.preventDefault(); return;
-                }
-            }
+            if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'i'))) e.preventDefault();
         });
 
         const display = document.getElementById('display');
         const calcContainer = document.getElementById('calc-container');
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
-        const zoomWrapper = document.getElementById('zoom-wrapper');
-        
         const bgMusic = document.getElementById('bg-music');
-        const bgVideo = document.getElementById('bg-video'); 
-        
+        const bgVideo = document.getElementById('bg-video');
         const progressFill = document.getElementById('progress-fill');
-        const currentTimeEl = document.getElementById('current-time');
-        const remainingTimeEl = document.getElementById('remaining-time');
-        const musicGui = document.getElementById('music-gui');
 
-        let appState = "CALC"; 
-        let currentStep = 0;
         let isTransitioning = false;
+        let currentStep = 0;
 
         const messages = [
             { text: "Ako'y alipin ng pag-ibig mo", duration: 6000 },
@@ -254,176 +236,107 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5800 }
         ];
 
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        function formatTime(s) {
+            const min = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
         }
 
-        // Sync Music GUI Progress Bar and Timestamps to the AUDIO file
         bgMusic.addEventListener('timeupdate', () => {
-            if (bgMusic.duration) {
-                const current = bgMusic.currentTime;
-                const duration = bgMusic.duration;
-                
-                const progress = (current / duration) * 100;
-                progressFill.style.width = progress + '%';
-                
-                currentTimeEl.innerText = formatTime(current);
-                remainingTimeEl.innerText = "-" + formatTime(duration - current);
-            }
+            if (!bgMusic.duration) return;
+            const progress = (bgMusic.currentTime / bgMusic.duration) * 100;
+            progressFill.style.width = progress + '%';
+            document.getElementById('curr-time').innerText = formatTime(bgMusic.currentTime);
+            document.getElementById('rem-time').innerText = "-" + formatTime(bgMusic.duration - bgMusic.currentTime);
         });
 
-        function updateFontSize() {
-            if (isTransitioning) return;
-            const len = display.innerText.length;
-            if (len > 14) display.style.fontSize = "1.8rem";
-            else if (len > 11) display.style.fontSize = "2.4rem";
-            else if (len > 8) display.style.fontSize = "3.2rem";
-            else display.style.fontSize = "4.8rem";
-        }
-
-        function appendNum(char, event) {
-            event.stopPropagation();
-            if (display.innerText === "Error" || display.innerText === "Nagkamali ba ako?" || display.innerText === "Calculating...") {
+        function appendNum(n, e) {
+            e.stopPropagation();
+            if (["Error", "Calculating...", "Nagkamali ba ako?"].includes(display.innerText)) {
                 display.innerText = "";
-                display.style.fontWeight = "200";
                 display.style.color = "#fff";
             }
-            if (display.innerText === '0' && char !== '.') display.innerText = char;
-            else display.innerText += char;
-            updateFontSize();
+            if (display.innerText === "0" && n !== ".") display.innerText = n;
+            else display.innerText += n;
+            
+            // Auto-shrink text
+            const len = display.innerText.length;
+            if (len > 12) display.style.fontSize = "2.2rem";
+            else if (len > 8) display.style.fontSize = "3.5rem";
+            else display.style.fontSize = "5rem";
         }
 
-        function clearDisplay(event) {
-            event.stopPropagation();
-            if(isTransitioning) return;
-            display.innerText = '0';
-            display.style.fontWeight = "200";
+        function clearDisplay(e) {
+            e.stopPropagation();
+            display.innerText = "0";
+            display.style.fontSize = "5rem";
             display.style.color = "#fff";
-            updateFontSize();
-            appState = "CALC";
         }
 
-        function startSequence(event) {
-            event.stopPropagation();
-            if (isTransitioning || display.innerText === "Error") return;
+        function startSequence(e) {
+            e.stopPropagation();
+            if (isTransitioning) return;
 
-            let userInput = display.innerText.replace(/\s/g, ''); 
-            let isValid = false;
-
+            let val = display.innerText.replace(/÷/g, '/').replace(/×/g, '*');
             try {
-                if (!userInput || userInput === "0") throw new Error("Empty");
-                let result = eval(userInput);
-                if (result === Infinity || isNaN(result)) throw new Error("Math Error");
-                if (['+', '-', '*', '/'].includes(userInput.slice(-1))) throw new Error("Trailing operator");
-                isValid = true; 
-            } catch (e) { 
-                isValid = false; 
-            }
-
-            if (!isValid) {
+                eval(val);
+            } catch {
                 display.innerText = "Error";
                 display.style.color = "#ff3b30";
-                display.style.fontWeight = "400";
-                display.style.fontSize = "4.8rem";
-                return; 
+                return;
             }
 
-            // --- THE TRAP: Triggered by ANY valid math equation ---
             isTransitioning = true;
             display.innerText = "Calculating...";
-            display.style.fontSize = "2.8rem"; 
-            display.style.fontWeight = "300";
-            display.style.color = "#888890";
+            display.style.fontSize = "2.5rem";
+            display.style.color = "rgba(255,255,255,0.5)";
 
             setTimeout(() => {
-                display.innerText = "Nagkamali ba ako?"; 
-                display.style.fontSize = "2.4rem";
-                display.style.fontWeight = "400";
+                display.innerText = "Nagkamali ba ako?";
                 display.style.color = "#ff3b30";
 
-                // Play the blurred background video (muted so browsers don't block it)
-                bgVideo.play().catch(e => console.log("Video autoplay blocked"));
+                // Play Video & Music (Starts at 183 seconds as requested!)
+                bgVideo.play();
+                bgMusic.currentTime = 183; 
+                bgMusic.volume = 0;
+                bgMusic.play();
                 
-                // Start playing the local audio file!
-                bgMusic.muted = true;
-                bgMusic.play().then(() => {
-                    bgMusic.pause();
-                    bgMusic.muted = false;
-                    startAudioFade();
-                }).catch(e => {
-                    bgMusic.muted = false;
-                    startAudioFade();
-                });
+                let vol = 0;
+                const fIn = setInterval(() => {
+                    if (vol < 1) { vol += 0.05; bgMusic.volume = Math.min(vol, 1); }
+                    else clearInterval(fIn);
+                }, 50);
 
-                function startAudioFade() {
-                    bgMusic.currentTime = 0; // Starts from 0:00. Change this number to skip ahead!
-                    bgMusic.volume = 0;
-                    bgMusic.play();
+                calcContainer.style.opacity = "0";
+                calcContainer.style.transform = "scale(0.8) translateY(100px)";
 
-                    let vol = 0;
-                    const fadeInInterval = setInterval(() => {
-                        if (vol < 1) {
-                            vol += 0.05; 
-                            bgMusic.volume = Math.min(vol, 1);
-                        } else clearInterval(fadeInInterval);
-                    }, 50); 
-                }
-
-                calcContainer.style.transform = 'scale(0.9) translateY(50px)';
-                calcContainer.style.opacity = '0';
-                
                 setTimeout(() => {
-                    calcContainer.style.display = 'none';
-                    overlay.style.display = 'flex';
-                    overlay.classList.add('no-click');
-                    
-                    setTimeout(() => { musicGui.style.opacity = '1'; }, 500);
-                    
-                    setTimeout(() => {
-                        appState = "RELAPSING";
-                        runAutomatedLyrics();
-                    }, 3000);
-                }, 1500); 
-
+                    calcContainer.style.display = "none";
+                    overlay.style.display = "flex";
+                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
+                    runLyrics();
+                }, 1500);
             }, 2000);
         }
 
-        function runAutomatedLyrics() {
+        function runLyrics() {
             if (currentStep < messages.length) {
-                renderMessage(messages[currentStep].text);
+                textField.innerHTML = messages[currentStep].text;
+                textField.className = "relapse-entry";
+                
                 setTimeout(() => {
-                    const isFinal = currentStep === messages.length - 1;
-                    textField.classList.remove('relapse-entry');
-                    textField.classList.add(isFinal ? 'relapse-exit-final' : 'relapse-exit');
-
+                    const isLast = currentStep === messages.length - 1;
+                    textField.className = isLast ? "relapse-exit-final" : "relapse-exit";
                     setTimeout(() => {
                         currentStep++;
-                        if (currentStep < messages.length) runAutomatedLyrics();
-                        else showPlotTwist();
-                    }, isFinal ? 1200 : 600); 
+                        if (currentStep < messages.length) runLyrics();
+                        else {
+                            textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
+                            textField.className = "relapse-entry";
+                        }
+                    }, isLast ? 2000 : 800);
                 }, messages[currentStep].duration);
             }
-        }
-
-        function renderMessage(content) {
-            zoomWrapper.classList.remove('zoom-layer');
-            void zoomWrapper.offsetWidth; 
-            zoomWrapper.classList.add('zoom-layer');
-
-            textField.classList.remove('relapse-exit', 'relapse-entry', 'relapse-exit-final', 'plot-twist-fade-in');
-            textField.innerHTML = content;
-            void textField.offsetWidth; 
-            textField.classList.add('relapse-entry');
-        }
-
-        function showPlotTwist() {
-            zoomWrapper.classList.remove('zoom-layer');
-            textField.classList.remove('relapse-exit', 'relapse-entry', 'relapse-exit-final');
-            textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
-            void textField.offsetWidth;
-            textField.classList.add('plot-twist-fade-in'); 
         }
     </script>
 </body>
