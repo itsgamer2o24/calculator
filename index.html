@@ -7,7 +7,6 @@
     
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
     <meta property="og:title" content="Calculator Pro">
-    <meta property="og:description" content="A premium, dynamic web calculator.">
     <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
@@ -28,7 +27,7 @@
             background-color: #020202; height: 100vh;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; user-select: none;
-            perspective: 1500px; /* Enhanced 3D perspective */
+            perspective: 1500px;
         }
 
         /* --- FILMIC BACKGROUND --- */
@@ -48,14 +47,7 @@
         .orb-3 { width: 60vw; height: 60vw; background: #bf360c; top: 30%; left: 40%; animation-delay: -10s; }
         @keyframes pulseOrb { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
 
-        /* Film Grain Effect */
-        body::after {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
-            opacity: 0.02; pointer-events: none; z-index: 100;
-        }
-
-        /* --- PREMIUM GLASS CALCULATOR (ULTRA-SMOOTH TILT) --- */
+        /* --- THE GLASS CALCULATOR (ULTRA-SMOOTH) --- */
         #calc-container {
             background: var(--glass-bg);
             backdrop-filter: blur(80px) saturate(180%);
@@ -64,9 +56,8 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1);
             width: 380px; z-index: 10;
-            transition: transform 0.1s ease-out, opacity 0.8s ease; /* Faster, smoother transform transition */
+            transition: transform 0.15s ease-out, opacity 0.8s ease, backdrop-filter 0.3s ease;
             transform-style: preserve-3d;
-            will-change: transform, backdrop-filter; /* Optimize for tilt and blur changes */
         }
 
         #display {
@@ -100,13 +91,13 @@
         /* --- THE CINEMATIC VOID --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(50px);
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(50px);
             display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
         }
 
         #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(30px) brightness(0.25);
+            object-fit: cover; z-index: -1; filter: blur(35px) brightness(0.25);
         }
 
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
@@ -121,7 +112,7 @@
         }
         @keyframes shineText { to { background-position: 200% center; } }
 
-        /* ANIMATIONS */
+        /* --- LYRIC ANIMATIONS --- */
         .zoom-absolute { animation: zoomAbsolute 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes zoomAbsolute {
             0% { transform: scale(0); opacity: 0; filter: blur(40px); }
@@ -129,16 +120,16 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        .lyric-in { animation: lyricIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .lyric-in { animation: lyricIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
         @keyframes lyricIn {
-            0% { transform: translateY(50px) scale(0.9); opacity: 0; filter: blur(20px); }
-            100% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0px); }
+            0% { transform: translateY(40px); opacity: 0; filter: blur(20px); }
+            100% { transform: translateY(0); opacity: 1; filter: blur(0px); }
         }
 
-        .lyric-out { animation: lyricOut 1s cubic-bezier(0.7, 0, 0.84, 0) forwards; }
+        .lyric-out { animation: lyricOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
         @keyframes lyricOut {
             0% { transform: scale(1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1.2); opacity: 0; filter: blur(30px); }
+            100% { transform: scale(1.1); opacity: 0; filter: blur(25px); }
         }
 
         /* --- MUSIC GUI --- */
@@ -150,7 +141,7 @@
         .album-art {
             width: 65px; height: 65px; border-radius: 50%;
             background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.15);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.1);
             animation: spinArt 8s linear infinite;
         }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
@@ -234,32 +225,17 @@
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's'))) e.preventDefault(); });
 
-        // --- ULTRA-SMOOTH TILT WITH DYNAMIC BLUR ---
+        // --- ENHANCED 3D TILT WITH DYNAMIC BLUR ---
         const card = document.getElementById('calc-container');
-        let cardTiltAngle = 60; // Max tilt factor
-        let defaultBackdropBlur = 80; // Default backdrop blur
-
         document.addEventListener('mousemove', (e) => {
             if (isTransitioning) return;
-            const x = (window.innerWidth / 2 - e.pageX) / cardTiltAngle;
-            const y = (window.innerHeight / 2 - e.pageY) / cardTiltAngle;
-
-            // Make tilt smoother and more responsive
-            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg) translateZ(10px)`;
-
-            // ADD DYNAMIC BLUR AND SHADOW based on tilt to enhance depth
-            const dynamicBlur = defaultBackdropBlur + Math.abs(x) + Math.abs(y); // Subtle dynamic blur
-            card.style.backdropFilter = `blur(${dynamicBlur}px) saturate(180%)`;
-            const shadowIntensity = 0.8 + (Math.abs(x) + Math.abs(y)) * 0.05; // Slightly deeper shadow when tilted
-            card.style.boxShadow = `0 50px 100px rgba(0,0,0,${shadowIntensity}), inset 0 2px 2px rgba(255,255,255,0.1)`;
-        });
-
-        // Reset tilt on mouseleave
-        document.addEventListener('mouseleave', () => {
-            if (isTransitioning) return;
-            card.style.transform = `rotateY(0deg) rotateX(0deg) translateZ(10px)`;
-            card.style.backdropFilter = `blur(${defaultBackdropBlur}px) saturate(180%)`;
-            card.style.boxShadow = `0 50px 100px rgba(0,0,0,0.8), inset 0 2px 2px rgba(255,255,255,0.1)`;
+            const x = (window.innerWidth / 2 - e.pageX) / 40;
+            const y = (window.innerHeight / 2 - e.pageY) / 40;
+            card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg) translateZ(20px)`;
+            
+            // Dynamic blur based on tilt angle
+            const blurAmount = 80 + Math.abs(x) + Math.abs(y);
+            card.style.backdropFilter = `blur(${blurAmount}px) saturate(180%)`;
         });
 
         const display = document.getElementById('display');
@@ -272,7 +248,6 @@
         let isTransitioning = false;
         let currentStep = 0;
 
-        // --- LYRICS DATA with durations for VISIBILITY ---
         const lyricsData = [
             { text: "Ako'y alipin ng pag-ibig mo", duration: 5200 },
             { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", duration: 5400 },
@@ -290,7 +265,6 @@
             return `${m}:${sc < 10 ? '0' : ''}${sc}`;
         }
 
-        // --- MUSIC PROGRESS UPDATE ---
         bgMusic.addEventListener('timeupdate', () => {
             if (!bgMusic.duration) return;
             progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
@@ -298,7 +272,6 @@
             document.getElementById('r-time').innerText = "-" + formatT(bgMusic.duration - bgMusic.currentTime);
         });
 
-        // --- CALCULATOR LOGIC ---
         function appendNum(n, e) {
             e.stopPropagation();
             if (["Error", "Calculating Pro...", "Nagkamali ba ako?"].includes(display.innerText)) {
@@ -314,7 +287,6 @@
             e.stopPropagation(); display.innerText = "0"; display.style.fontSize = "5.2rem";
         }
 
-        // --- TRIGGER START SEQUENCE ---
         function startSequence(e) {
             e.stopPropagation();
             if (isTransitioning) return;
@@ -332,17 +304,16 @@
                 display.style.color = "#ff3b30";
 
                 bgVideo.play();
-                bgMusic.currentTime = 183.8; // Set precise start time in full track
+                bgMusic.currentTime = 183.8; 
                 bgMusic.volume = 0;
                 bgMusic.play();
                 
                 let v = 0;
                 const fIn = setInterval(() => {
-                    if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } // Faster fade in
+                    if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); }
                     else clearInterval(fIn);
                 }, 50);
 
-                // Implode the calculator
                 card.style.transform = "scale(0) rotateX(90deg) blur(60px)";
                 card.style.opacity = "0";
 
@@ -350,51 +321,54 @@
                     card.style.display = "none";
                     overlay.style.display = "flex";
                     
-                    // --- CINEMATIC INTRO ZOOM ---
+                    // INTRO ZOOM
                     textField.innerHTML = "Nagkamali ba ako?";
                     textField.className = "zoom-absolute"; 
 
-                    // Show GUI after zoom settles
                     setTimeout(() => { 
                         document.getElementById('music-gui').style.opacity = "1";
                         document.getElementById('music-gui').style.transform = "translateY(-10px)";
-                    }, 1000);
+                    }, 500);
 
-                    // Start actual lyrics flow after intro zoom
-                    setTimeout(() => { runLyrics(); }, 2200); 
+                    // START LYRICS AFTER ZOOM
+                    setTimeout(() => { 
+                        currentStep = 0;
+                        runLyrics(); 
+                    }, 2200); 
                 }, 1000);
             }, 2000);
         }
 
-        // --- LYRIC RUNNER logic ---
         function runLyrics() {
             if (currentStep < lyricsData.length) {
                 const currentLyric = lyricsData[currentStep];
                 
-                // Set text and class to trigger fade-in blur
+                // 1. Force state reset
+                textField.className = "";
+                void textField.offsetWidth; // Force Reflow
+                
+                // 2. Load text and start fade-in
                 textField.innerHTML = currentLyric.text;
                 textField.className = "lyric-in"; 
                 
-                // Schedule lyric removal (fade-out) after its visibility duration
+                // 3. Wait for line to finish
                 setTimeout(() => {
-                    textField.className = "lyric-out"; // Class handles fade-out blur
+                    textField.className = "lyric-out"; // Fade out
 
-                    // Wait for fade-out to complete before starting next lyric
+                    // 4. Wait for fade-out to end, then load next
                     setTimeout(() => {
-                        textField.innerHTML = ""; // Clear text
                         currentStep++;
-                        if (currentStep < lyricsData.length) {
-                            runLyrics(); // Recurse for next lyric
-                        } else {
-                            showFinalPakak(); // Final message when lyrics end
-                        }
-                    }, 1000); // Duration of 'lyric-out' transition
-                }, currentLyric.duration); // Time the lyric stays visible
+                        runLyrics();
+                    }, 800); 
+                }, currentLyric.duration); 
+            } else {
+                showFinalPakak();
             }
         }
 
         function showFinalPakak() {
-            // Re-use zoom effect for final massive impact
+            textField.innerHTML = "";
+            void textField.offsetWidth;
             textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
             textField.className = "zoom-absolute";
         }
