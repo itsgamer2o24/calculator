@@ -7,14 +7,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
-            margin: 0; padding: 0; box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent; outline: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
         }
 
         body {
-            background-color: #050505; height: 100vh; display: flex;
-            justify-content: center; align-items: center; overflow: hidden; user-select: none;
+            background-color: #050505;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
         }
 
         /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
@@ -26,9 +34,7 @@
 
         @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; animation: pulseOrb 10s infinite alternate;
-        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; animation: pulseOrb 10s infinite alternate; }
 
         .orb-1 { width: 60vw; height: 60vw; background: #1c2b59; top: 20%; left: 20%; }
         .orb-2 { width: 50vw; height: 50vw; background: #4a154b; bottom: 20%; right: 20%; animation-delay: -3s; }
@@ -63,42 +69,29 @@
         .op:active { background: #d98505; box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2); }
         .oval { grid-column: span 2; width: 100%; border-radius: 36px; justify-content: flex-start; padding-left: 28px; }
 
-        /* --- CINEMATIC MUSIC OVERLAY --- */
+        /* --- CINEMATIC MUSIC OVERLAY WITH BLURRED VIDEO --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); display: none; flex-direction: column;
             justify-content: center; align-items: center; z-index: 999;
         }
 
-        /* NEW: YouTube IFrame Wrapper */
-        #yt-wrapper {
+        #bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; overflow: hidden;
-            filter: blur(15px) brightness(0.4); 
-        }
-
-        /* Scales the YouTube video up to cover the screen like object-fit: cover */
-        #yt-player {
-            width: 300vw; height: 300vh; position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            object-fit: cover; z-index: -1; filter: blur(15px) brightness(0.4); 
         }
 
         .no-click { pointer-events: none; }
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; z-index: 2; }
+        #void-text { font-size: 2.2rem; font-weight: 500; text-align: center; width: 90%; opacity: 0; line-height: 1.4; color: #ffffff; display: inline-block; letter-spacing: -0.5px; }
 
-        #void-text {
-            font-size: 2.2rem; font-weight: 500; text-align: center; width: 90%; opacity: 0;
-            line-height: 1.4; color: #ffffff; display: inline-block; letter-spacing: -0.5px;
-        }
-
-        /* --- MUSIC PLAYER GUI --- */
+        /* --- MUSIC PLAYER GUI WITH TIMESTAMPS --- */
         #music-gui {
             position: absolute; bottom: 40px; width: 85%; max-width: 400px;
             display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 2s ease; z-index: 2;
         }
 
         .gui-header { display: flex; align-items: center; gap: 15px; }
-
         .album-art {
             width: 55px; height: 55px; border-radius: 50%;
             background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
@@ -119,7 +112,7 @@
         .progress-container { width: 100%; display: flex; flex-direction: column; gap: 6px; }
         .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a0a0ab; font-weight: 500; }
         .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.3s linear;}
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.1s linear;}
         
         #creator-name { 
             position: absolute; top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; 
@@ -153,6 +146,10 @@
         <div class="orb orb-3"></div>
     </div>
 
+    <audio id="bg-music" preload="auto">
+        <source src="bulong.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="calc-container">
         <div id="display">0</div>
         <div class="button-layout">
@@ -183,9 +180,9 @@
     </div>
 
     <div id="void-overlay">
-        <div id="yt-wrapper">
-            <div id="yt-player"></div>
-        </div>
+        <video id="bg-video" loop playsinline muted>
+            <source src="video.mp4" type="video/mp4">
+        </video>
 
         <div id="creator-name">MADE BY MATT AT JEC</div>
         
@@ -213,8 +210,6 @@
         </div>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
-
     <script>
         // --- SECURITY WALL ---
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -229,27 +224,14 @@
             }
         });
 
-        // --- YOUTUBE API SETUP ---
-        let player;
-        
-        // ADJUST THIS NUMBER: If the song starts too early, increase this to fast-forward into the song!
-        const startSeconds = 0; 
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                videoId: 'YFB_Lz7grkc', // Your specific YouTube video ID
-                playerVars: {
-                    'autoplay': 0, 'controls': 0, 'disablekb': 1, 'fs': 0, 
-                    'modestbranding': 1, 'playsinline': 1, 'rel': 0, 'showinfo': 0
-                }
-            });
-        }
-
         const display = document.getElementById('display');
         const calcContainer = document.getElementById('calc-container');
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
         const zoomWrapper = document.getElementById('zoom-wrapper');
+        
+        const bgMusic = document.getElementById('bg-music');
+        const bgVideo = document.getElementById('bg-video'); 
         
         const progressFill = document.getElementById('progress-fill');
         const currentTimeEl = document.getElementById('current-time');
@@ -278,20 +260,19 @@
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // Continually check the YouTube player's time to update the progress bar
-        setInterval(() => {
-            if (player && player.getPlayerState && player.getPlayerState() === 1) { // 1 = Playing
-                const current = player.getCurrentTime();
-                const duration = player.getDuration();
+        // Sync Music GUI Progress Bar and Timestamps to the AUDIO file
+        bgMusic.addEventListener('timeupdate', () => {
+            if (bgMusic.duration) {
+                const current = bgMusic.currentTime;
+                const duration = bgMusic.duration;
                 
-                if (duration > 0) {
-                    const progress = (current / duration) * 100;
-                    progressFill.style.width = progress + '%';
-                    currentTimeEl.innerText = formatTime(current);
-                    remainingTimeEl.innerText = "-" + formatTime(duration - current);
-                }
+                const progress = (current / duration) * 100;
+                progressFill.style.width = progress + '%';
+                
+                currentTimeEl.innerText = formatTime(current);
+                remainingTimeEl.innerText = "-" + formatTime(duration - current);
             }
-        }, 500);
+        });
 
         function updateFontSize() {
             if (isTransitioning) return;
@@ -331,7 +312,6 @@
             let userInput = display.innerText.replace(/\s/g, ''); 
             let isValid = false;
 
-            // Make sure they actually typed a valid math equation
             try {
                 if (!userInput || userInput === "0") throw new Error("Empty");
                 let result = eval(userInput);
@@ -350,7 +330,7 @@
                 return; 
             }
 
-            // --- THE TRAP TRIGGER ---
+            // --- THE TRAP: Triggered by ANY valid math equation ---
             isTransitioning = true;
             display.innerText = "Calculating...";
             display.style.fontSize = "2.8rem"; 
@@ -363,21 +343,31 @@
                 display.style.fontWeight = "400";
                 display.style.color = "#ff3b30";
 
-                // Start YouTube Video
-                if (player && player.playVideo) {
-                    player.seekTo(startSeconds);
-                    player.setVolume(0); // Start at 0 volume for fade effect
-                    player.playVideo();
+                // Play the blurred background video (muted so browsers don't block it)
+                bgVideo.play().catch(e => console.log("Video autoplay blocked"));
+                
+                // Start playing the local audio file!
+                bgMusic.muted = true;
+                bgMusic.play().then(() => {
+                    bgMusic.pause();
+                    bgMusic.muted = false;
+                    startAudioFade();
+                }).catch(e => {
+                    bgMusic.muted = false;
+                    startAudioFade();
+                });
 
-                    // Smooth volume fade-in
+                function startAudioFade() {
+                    bgMusic.currentTime = 0; // Starts from 0:00. Change this number to skip ahead!
+                    bgMusic.volume = 0;
+                    bgMusic.play();
+
                     let vol = 0;
                     const fadeInInterval = setInterval(() => {
-                        if (vol < 100) {
-                            vol += 5; 
-                            player.setVolume(vol);
-                        } else {
-                            clearInterval(fadeInInterval);
-                        }
+                        if (vol < 1) {
+                            vol += 0.05; 
+                            bgMusic.volume = Math.min(vol, 1);
+                        } else clearInterval(fadeInInterval);
                     }, 50); 
                 }
 
