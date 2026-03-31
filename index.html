@@ -2,190 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Calculator Pro</title>
     
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
-    <meta property="og:title" content="Calculator Pro">
-    <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
-
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary-orange: #ff9f0a;
             --glass-bg: rgba(255, 255, 255, 0.03);
-            --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.4);
-            --glow-white: 0 0 10px #fff, 0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3);
-            --glow-red: 0 0 15px #ff3b30, 0 0 30px rgba(255, 59, 48, 0.6), 0 0 60px rgba(255, 59, 48, 0.4);
+            --glow-white: 0 0 10px #fff, 0 0 20px rgba(255,255,255,0.5);
+            --glow-red: 0 0 15px #ff3b30, 0 0 30px rgba(255, 59, 48, 0.6);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background-color: #010101; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; user-select: none; perspective: 1500px; }
 
-        body {
-            background-color: #010101; height: 100vh;
-            display: flex; justify-content: center; align-items: center;
-            overflow: hidden; user-select: none;
-            perspective: 1500px;
-        }
-
-        /* --- FILMIC BACKGROUND --- */
-        .bg-mesh {
-            position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh;
-            z-index: -1; background: radial-gradient(circle at center, #0a0a0f 0%, #000 100%);
-            animation: spinMesh 50s linear infinite;
-        }
+        /* --- DYNAMIC BACKGROUND --- */
+        .bg-mesh { position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh; z-index: -1; animation: spinMesh 50s linear infinite; }
         @keyframes spinMesh { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(120px); 
-            opacity: 0.35; animation: pulseOrb 15s infinite alternate ease-in-out;
-        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.35; animation: pulseOrb 15s infinite alternate ease-in-out; }
         .orb-1 { width: 80vw; height: 80vw; background: #1a237e; top: 10%; left: 5%; }
-        .orb-2 { width: 70vw; height: 70vw; background: #4a148c; bottom: 5%; right: 5%; animation-delay: -5s; }
-        .orb-3 { width: 60vw; height: 60vw; background: #bf360c; top: 30%; left: 40%; animation-delay: -10s; }
+        .orb-2 { width: 70vw; height: 70vw; background: #4a148c; bottom: 5%; right: 5%; }
+        .orb-3 { width: 60vw; height: 60vw; background: #bf360c; top: 30%; left: 40%; }
         @keyframes pulseOrb { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
 
-        /* Noise Texture overlay */
-        body::after {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
-            opacity: 0.02; pointer-events: none; z-index: 100;
-        }
-
-        /* --- THE GLASS CALCULATOR --- */
+        /* --- GLASS CALCULATOR --- */
         #calc-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(80px) saturate(180%);
-            -webkit-backdrop-filter: blur(80px) saturate(180%);
-            padding: 45px 28px; border-radius: 65px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--glass-bg); backdrop-filter: blur(80px) saturate(180%); -webkit-backdrop-filter: blur(80px) saturate(180%);
+            padding: 45px 28px; border-radius: 65px; border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1);
-            width: 380px; z-index: 10;
-            transition: transform 0.15s ease-out, opacity 0.8s ease;
-            transform-style: preserve-3d;
+            width: 380px; z-index: 10; transition: transform 0.15s ease-out, opacity 0.8s ease; transform-style: preserve-3d;
         }
 
         #display {
-            width: 100%; height: 130px; color: #fff;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 5.2rem; font-weight: 100; text-align: right;
-            padding: 0 15px; margin-bottom: 30px;
-            display: flex; align-items: flex-end; justify-content: flex-end;
-            letter-spacing: -4px; transition: font-size 0.25s ease;
-            white-space: nowrap; overflow: hidden;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+            width: 100%; height: 130px; color: #fff; font-family: 'Montserrat', sans-serif;
+            font-size: 5.2rem; font-weight: 100; text-align: right; padding: 0 15px; margin-bottom: 30px;
+            display: flex; align-items: flex-end; justify-content: flex-end; letter-spacing: -4px; transition: font-size 0.25s ease;
+            white-space: nowrap; overflow: hidden; text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
         .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-        
         button {
-            border: none; height: 74px; width: 100%; border-radius: 37px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.7rem; font-weight: 300; cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex; justify-content: center; align-items: center;
-            background: rgba(255, 255, 255, 0.05); color: #fff;
+            border: none; height: 74px; width: 100%; border-radius: 37px; font-family: 'Montserrat', sans-serif;
+            font-size: 1.7rem; font-weight: 300; cursor: pointer; transition: all 0.2s;
+            display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.05); color: #fff;
             box-shadow: 0 8px 15px rgba(0,0,0,0.3);
         }
-        button:active { transform: scale(0.88) translateY(4px); background: rgba(255, 255, 255, 0.12); }
+        button:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.12); }
         .func { background: rgba(255, 255, 255, 0.12); font-weight: 600; }
-        .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; box-shadow: 0 10px 25px rgba(255, 159, 10, 0.3); }
+        .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 32px; border-radius: 40px; }
 
-        /* --- CINEMATIC VOID --- */
+        /* --- CINEMATIC OVERLAY --- */
         #void-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(50px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85);
             display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 999;
         }
-
-        #bg-video {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; filter: blur(35px) brightness(0.25);
-        }
-
+        #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(35px) brightness(0.25); }
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
         
-        /* THE GLOWING TEXT ENGINE */
         #void-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.4rem; font-style: italic; font-weight: 700; 
-            text-align: center; width: 90%; opacity: 0; line-height: 1.2;
-            color: #fff;
-            text-shadow: var(--glow-white); /* Core White Glow */
-            animation: breatheGlow 3s ease-in-out infinite;
+            font-family: 'Playfair Display', serif; font-size: 3.4rem; font-style: italic; font-weight: 700; 
+            text-align: center; width: 90%; opacity: 0; line-height: 1.2; color: #fff;
+            text-shadow: var(--glow-white); animation: breatheGlow 3s ease-in-out infinite;
         }
-
-        @keyframes breatheGlow {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.3); }
-        }
-
-        .red-text { 
-            color: #ff3b30 !important; 
-            text-shadow: var(--glow-red) !important; /* Intense Red Glow */
-        }
+        @keyframes breatheGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.3); } }
+        .red-text { color: #ff3b30 !important; text-shadow: var(--glow-red) !important; }
 
         /* ANIMATIONS */
         .zoom-absolute { animation: zoomAbsolute 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes zoomAbsolute {
-            0% { transform: scale(0); opacity: 0; filter: blur(40px); }
-            45% { transform: scale(1.45); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
+        @keyframes zoomAbsolute { 0% { transform: scale(0); opacity: 0; filter: blur(40px); } 45% { transform: scale(1.45); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; } }
         .lyric-in { animation: lyricIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
-        @keyframes lyricIn {
-            0% { transform: translateY(40px); opacity: 0; filter: blur(20px); }
-            100% { transform: translateY(0); opacity: 1; filter: blur(0px); }
-        }
-
+        @keyframes lyricIn { 0% { transform: translateY(40px); opacity: 0; filter: blur(20px); } 100% { transform: translateY(0); opacity: 1; filter: blur(0px); } }
         .lyric-out { animation: lyricOut 0.8s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
-        @keyframes lyricOut {
-            0% { transform: scale(1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1.1); opacity: 0; filter: blur(25px); }
-        }
+        @keyframes lyricOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; filter: blur(25px); } }
 
         /* --- MUSIC GUI --- */
-        #music-gui {
-            position: absolute; bottom: 60px; width: 80%; max-width: 420px;
-            display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: all 2s ease;
-        }
+        #music-gui { position: absolute; bottom: 60px; width: 80%; max-width: 420px; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: all 2s ease; }
         .gui-header { display: flex; align-items: center; gap: 20px; }
-        .album-art {
-            width: 65px; height: 65px; border-radius: 50%;
-            background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.1);
-            animation: spinArt 8s linear infinite;
-        }
+        .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; box-shadow: 0 10px 40px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.1); animation: spinArt 8s linear infinite; }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
-        
-        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
         .track-artist { font-family: 'Montserrat', sans-serif; color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px; margin-top: 4px; }
-
         .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 2px; box-shadow: 0 0 20px #fff; }
-        .time-row { font-family: 'Montserrat', sans-serif; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-top: 8px; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 2px; box-shadow: 0 0 15px #fff; }
+        .time-row { font-family: 'Montserrat', sans-serif; display: flex; justify-content: space-between; font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 600; margin-top: 8px; }
 
-        #signature { 
-            position: absolute; top: 50px; color: var(--text-dim); 
-            font-family: 'Syncopate', sans-serif; font-size: 0.65rem; 
-            letter-spacing: 8px; text-transform: uppercase;
-        }
+        #signature { position: absolute; top: 50px; color: rgba(255,255,255,0.2); font-family: 'Syncopate', sans-serif; font-size: 0.65rem; letter-spacing: 8px; text-transform: uppercase; }
 
-        @media (max-width: 400px) {
-            #calc-container { border-radius: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; padding-bottom: 80px; }
-        }
+        @media (max-width: 400px) { #calc-container { border-radius: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; padding-bottom: 80px; } }
     </style>
 </head>
 <body>
 
     <div class="bg-mesh">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
+        <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
     </div>
 
     <audio id="bg-music" preload="auto"><source src="bulong.mp3" type="audio/mpeg"></audio>
@@ -193,25 +106,25 @@
     <div id="calc-container">
         <div id="display">0</div>
         <div class="button-layout">
-            <button class="func" onclick="clearDisplay(event)">AC</button>
-            <button class="func" onclick="appendNum('(', event)">(</button>
-            <button class="func" onclick="appendNum(')', event)">)</button>
-            <button class="op" onclick="appendNum('/', event)">÷</button>
-            <button onclick="appendNum('7', event)">7</button>
-            <button onclick="appendNum('8', event)">8</button>
-            <button onclick="appendNum('9', event)">9</button>
-            <button class="op" onclick="appendNum('*', event)">×</button>
-            <button onclick="appendNum('4', event)">4</button>
-            <button onclick="appendNum('5', event)">5</button>
-            <button onclick="appendNum('6', event)">6</button>
-            <button class="op" onclick="appendNum('-', event)">−</button>
-            <button onclick="appendNum('1', event)">1</button>
-            <button onclick="appendNum('2', event)">2</button>
-            <button onclick="appendNum('3', event)">3</button>
-            <button class="op" onclick="appendNum('+', event)">+</button>
-            <button class="oval" onclick="appendNum('0', event)">0</button>
-            <button onclick="appendNum('.', event)">.</button>
-            <button class="op" onclick="startSequence(event)">=</button>
+            <button class="func" onclick="btnPress('AC')">AC</button>
+            <button class="func" onclick="btnPress('(')">(</button>
+            <button class="func" onclick="btnPress(')')">)</button>
+            <button class="op" onclick="btnPress('/')">÷</button>
+            <button onclick="btnPress('7')">7</button>
+            <button onclick="btnPress('8')">8</button>
+            <button onclick="btnPress('9')">9</button>
+            <button class="op" onclick="btnPress('*')">×</button>
+            <button onclick="btnPress('4')">4</button>
+            <button onclick="btnPress('5')">5</button>
+            <button onclick="btnPress('6')">6</button>
+            <button class="op" onclick="btnPress('-')">−</button>
+            <button onclick="btnPress('1')">1</button>
+            <button onclick="btnPress('2')">2</button>
+            <button onclick="btnPress('3')">3</button>
+            <button class="op" onclick="btnPress('+')">+</button>
+            <button class="oval" onclick="btnPress('0')">0</button>
+            <button onclick="btnPress('.')">.</button>
+            <button class="op" onclick="startSequence()">=</button>
         </div>
     </div>
 
@@ -222,10 +135,7 @@
         <div id="music-gui">
             <div class="gui-header">
                 <div class="album-art"></div> 
-                <div class="track-details">
-                    <div class="track-title">Bulong</div>
-                    <div class="track-artist">December Avenue</div>
-                </div>
+                <div class="track-details"><div class="track-title">Bulong</div><div class="track-artist">December Avenue</div></div>
             </div>
             <div class="progress-container">
                 <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -235,11 +145,25 @@
     </div>
 
     <script>
-        // --- PRO SECURITY ---
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's'))) e.preventDefault(); });
+        const tick = new Audio('https://www.soundjay.com/buttons/sounds/button-50.mp3'); tick.volume = 0.2;
 
-        // --- ENHANCED 3D TILT ---
+        // HIJACK EXIT: Warns user if they try to close tab
+        window.onbeforeunload = function() { return "The music is still playing. Finish it first."; };
+
+        function btnPress(key) {
+            tick.currentTime = 0; tick.play();
+            if (navigator.vibrate) navigator.vibrate(15);
+            
+            // FULLSCREEN TRIGGER: Website takes over on first click
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+
+            if (key === 'AC') clearDisplay();
+            else appendNum(key);
+        }
+
+        // 3D TILT
         const card = document.getElementById('calc-container');
         document.addEventListener('mousemove', (e) => {
             if (isTransitioning) return;
@@ -270,10 +194,7 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5000 }
         ];
 
-        function formatT(s) {
-            const m = Math.floor(s/60); const sc = Math.floor(s%60);
-            return `${m}:${sc < 10 ? '0' : ''}${sc}`;
-        }
+        function formatT(s) { const m = Math.floor(s/60); const sc = Math.floor(s%60); return `${m}:${sc < 10 ? '0' : ''}${sc}`; }
 
         bgMusic.addEventListener('timeupdate', () => {
             if (!bgMusic.duration) return;
@@ -282,47 +203,30 @@
             document.getElementById('r-time').innerText = "-" + formatT(bgMusic.duration - bgMusic.currentTime);
         });
 
-        function appendNum(n, e) {
-            e.stopPropagation();
-            if (["Error", "Calculating Pro...", "Nagkamali ba ako?"].includes(display.innerText)) {
-                display.innerText = ""; display.style.color = "#fff";
-            }
+        function appendNum(n) {
+            if (["Error", "Calculating...", "Nagkamali ba ako?"].includes(display.innerText)) { display.innerText = ""; }
             if (display.innerText === "0" && n !== ".") display.innerText = n;
             else display.innerText += n;
             const len = display.innerText.length;
             display.style.fontSize = len > 12 ? "2.2rem" : len > 8 ? "3.5rem" : "5.2rem";
         }
 
-        function clearDisplay(e) {
-            e.stopPropagation(); display.innerText = "0"; display.style.fontSize = "5.2rem";
-        }
+        function clearDisplay() { display.innerText = "0"; display.style.fontSize = "5.2rem"; }
 
-        function startSequence(e) {
-            e.stopPropagation();
+        function startSequence() {
             if (isTransitioning) return;
-            try { eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*')); } catch {
-                display.innerText = "Error"; display.style.color = "#ff3b30"; return;
-            }
+            try { eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*')); } catch { display.innerText = "Error"; return; }
 
             isTransitioning = true;
             display.innerText = "Calculating Pro...";
-            display.style.fontSize = "2.2rem";
-            display.style.color = "var(--text-dim)";
 
             setTimeout(() => {
                 display.innerText = "Nagkamali ba ako?";
-                display.style.color = "#ff3b30";
+                document.title = "🎵 Now Playing: Bulong"; 
 
                 bgVideo.play();
-                bgMusic.currentTime = 183.8; 
-                bgMusic.volume = 0;
-                bgMusic.play();
-                
-                let v = 0;
-                const fIn = setInterval(() => {
-                    if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); }
-                    else clearInterval(fIn);
-                }, 50);
+                bgMusic.currentTime = 183.8; bgMusic.volume = 0; bgMusic.play();
+                let v = 0; const fIn = setInterval(() => { if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } else clearInterval(fIn); }, 50);
 
                 card.style.transform = "scale(0) rotateX(90deg) blur(60px)";
                 card.style.opacity = "0";
@@ -333,15 +237,8 @@
                     textField.innerHTML = "Nagkamali ba ako?";
                     textField.className = "zoom-absolute"; 
 
-                    setTimeout(() => { 
-                        document.getElementById('music-gui').style.opacity = "1";
-                        document.getElementById('music-gui').style.transform = "translateY(-10px)";
-                    }, 500);
-
-                    setTimeout(() => { 
-                        currentStep = 0;
-                        runLyrics(); 
-                    }, 2200); 
+                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 500);
+                    setTimeout(() => { runLyrics(); }, 2200); 
                 }, 1000);
             }, 2000);
         }
@@ -350,23 +247,19 @@
             if (currentStep < lyricsData.length) {
                 const currentLyric = lyricsData[currentStep];
                 textField.className = "";
-                void textField.offsetWidth; // Refresh logic
-                
+                void textField.offsetWidth;
                 textField.innerHTML = currentLyric.text;
                 textField.className = "lyric-in"; 
-                
                 setTimeout(() => {
                     textField.className = "lyric-out";
-                    setTimeout(() => {
-                        currentStep++;
-                        runLyrics();
-                    }, 800); 
+                    setTimeout(() => { currentStep++; runLyrics(); }, 800); 
                 }, currentLyric.duration); 
             } else {
-                textField.innerHTML = "";
-                void textField.offsetWidth;
+                textField.innerHTML = ""; void textField.offsetWidth;
                 textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
                 textField.className = "zoom-absolute";
+                // Unlock Tab upon finishing the song
+                window.onbeforeunload = null;
             }
         }
     </script>
