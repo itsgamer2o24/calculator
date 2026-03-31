@@ -152,7 +152,10 @@
     <script>
         const tick = new Audio('https://www.soundjay.com/buttons/sounds/button-50.mp3'); tick.volume = 0.2;
         let isTransitioning = false;
-        let currentStep = 0;
+        
+        // SYNC VARIABLES
+        let currentLyricIndex = -1;
+        let isLyricOut = false;
 
         async function masterLockdown() {
             const el = document.documentElement;
@@ -199,19 +202,24 @@
         const bgVideo = document.getElementById('bg-video');
         const progressFill = document.getElementById('progress-fill');
 
+        // NEW TIMELINE-BASED LYRICS (Start and End times in seconds relative to the audio)
+        // Adjust the start/end numbers slightly if the MP3 timing is a bit different.
         const lyricsData = [
-            { text: "Ako'y alipin ng pag-ibig mo", duration: 5200 },
-            { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", duration: 5400 },
-            { text: "Hanggat ang <span class='red-text'>Puso</span> mo'y", duration: 2400 },
-            { text: "<span class='red-text'>Sa akin lang</span>", duration: 1200 },
-            { text: "Hindi kana", duration: 1200 },
-            { text: "<span class='red-text'>Malilinlang</span>", duration: 1200 },
-            { text: "Ikaw ang <span class='red-text'>ilaw</span> sa <span class='red-text'>dilim</span>", duration: 2500 },
-            { text: "<span class='red-text'>At ang liwanag</span>", duration: 1500 },
-            { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5000 }
+            { text: "Ako'y alipin ng pag-ibig mo", start: 186.2, end: 191.4 },
+            { text: "Handang ibigin ang <span class='red-text'>isang tulad mo</span>", start: 192.2, end: 197.6 },
+            { text: "Hanggat ang <span class='red-text'>Puso</span> mo'y", start: 198.4, end: 200.8 },
+            { text: "<span class='red-text'>Sa akin lang</span>", start: 201.6, end: 202.8 },
+            { text: "Hindi kana", start: 203.6, end: 204.8 },
+            { text: "<span class='red-text'>Malilinlang</span>", start: 205.6, end: 206.8 },
+            { text: "Ikaw ang <span class='red-text'>ilaw</span> sa <span class='red-text'>dilim</span>", start: 207.6, end: 210.1 },
+            { text: "<span class='red-text'>At ang liwanag</span>", start: 210.9, end: 212.4 },
+            { text: "<span class='red-text'>Ng mga bituin</span>", start: 213.2, end: 218.2 }
         ];
 
-        bgMusic.addEventListener('timeupdate', () => { if (!bgMusic.duration) return; progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%'; });
+        bgMusic.addEventListener('timeupdate', () => { 
+            if (!bgMusic.duration) return; 
+            progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%'; 
+        });
 
         function appendNum(n) {
             if (["Error", "Nagkamali ba ako?"].includes(display.innerText)) display.innerText = "";
@@ -236,7 +244,7 @@
                 document.body.classList.add('invert-glitch');
                 document.getElementById('theme-meta').setAttribute('content', '#ff3b30');
                 updateConsole("CRITICAL_CORE_FAILURE");
-                gtag('event', 'trap_triggered');
+                if (typeof gtag === 'function') gtag('event', 'trap_triggered');
 
                 setTimeout(() => {
                     document.body.classList.remove('invert-glitch');
@@ -258,42 +266,67 @@
                         textField.innerHTML = "Nagkamali ba ako?";
                         textField.className = "zoom-absolute"; 
                         setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 1000);
-                        setTimeout(() => { runLyrics(); }, 2400); 
+                        
+                        // Start the lyric synchronizer loop
+                        requestAnimationFrame(syncLyrics);
                     }, 1000);
                 }, 400);
             }, 500);
         }
 
-        function runLyrics() {
-            if (currentStep < lyricsData.length) {
-                const currentLyric = lyricsData[currentStep];
-                textField.className = ""; void textField.offsetWidth;
-                textField.innerHTML = currentLyric.text;
-                textField.className = "lyric-in"; 
-                setTimeout(() => {
-                    textField.className = "lyric-out";
-                    setTimeout(() => { currentStep++; runLyrics(); }, 800); 
-                }, currentLyric.duration); 
-            } else {
-                textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
-                textField.className = "zoom-absolute";
-                gtag('event', 'song_finished');
-                
-                setTimeout(() => {
-                    textField.style.opacity = "0"; 
-                    document.getElementById('music-gui').style.opacity = "0"; 
-                    bgVideo.style.opacity = "0";
-                    document.getElementById('theme-meta').setAttribute('content', '#000000');
-                    updateConsole("SESSION_LOCKED: RECOVERY_IN_300S");
+        function syncLyrics() {
+            if (!isTransitioning) return;
+            const time = bgMusic.currentTime;
 
-                    setTimeout(() => { 
-                        isTransitioning = false;
-                        window.onbeforeunload = null; 
-                        if (document.exitFullscreen) document.exitFullscreen();
-                        location.reload(); 
-                    }, 300000); 
-                }, 4000);
+            // Find the lyric object that matches the current audio time
+            const activeIndex = lyricsData.findIndex(l => time >= l.start && time < l.end);
+
+            if (activeIndex !== -1) {
+                if (currentLyricIndex !== activeIndex) {
+                    // Start of a new lyric line
+                    currentLyricIndex = activeIndex;
+                    isLyricOut = false;
+                    
+                    textField.className = ""; 
+                    void textField.offsetWidth; // Trigger reflow to restart CSS animation
+                    textField.innerHTML = lyricsData[activeIndex].text;
+                    textField.className = "lyric-in";
+                } else {
+                    // Transition out slightly before the lyric ends (0.9s duration of lyricFadeOut)
+                    if (!isLyricOut && time >= lyricsData[activeIndex].end - 0.9) {
+                        textField.className = "lyric-out";
+                        isLyricOut = true;
+                    }
+                }
+            } else if (time >= 219.0 && currentLyricIndex === lyricsData.length - 1) {
+                // Outro trigger logic (Runs once after the last lyric is completely done)
+                currentLyricIndex++; 
+                triggerOutro();
             }
+
+            requestAnimationFrame(syncLyrics);
+        }
+
+        function triggerOutro() {
+            textField.className = ""; void textField.offsetWidth;
+            textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
+            textField.className = "zoom-absolute";
+            if (typeof gtag === 'function') gtag('event', 'song_finished');
+            
+            setTimeout(() => {
+                textField.style.opacity = "0"; 
+                document.getElementById('music-gui').style.opacity = "0"; 
+                bgVideo.style.opacity = "0";
+                document.getElementById('theme-meta').setAttribute('content', '#000000');
+                updateConsole("SESSION_LOCKED: RECOVERY_IN_300S");
+
+                setTimeout(() => { 
+                    isTransitioning = false;
+                    window.onbeforeunload = null; 
+                    if (document.exitFullscreen) document.exitFullscreen();
+                    location.reload(); 
+                }, 300000); 
+            }, 4000);
         }
     </script>
 </body>
