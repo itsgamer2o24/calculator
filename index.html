@@ -15,16 +15,16 @@
         :root {
             --primary-orange: #ff9f0a;
             --glass-bg: rgba(255, 255, 255, 0.03);
+            --text-main: #ffffff;
             --text-dim: rgba(255, 255, 255, 0.4);
+            --glow-white: 0 0 10px #fff, 0 0 20px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.3);
+            --glow-red: 0 0 15px #ff3b30, 0 0 30px rgba(255, 59, 48, 0.6), 0 0 60px rgba(255, 59, 48, 0.4);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent; outline: none;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
-            background-color: #020202; height: 100vh;
+            background-color: #010101; height: 100vh;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; user-select: none;
             perspective: 1500px;
@@ -40,14 +40,21 @@
 
         .orb {
             position: absolute; border-radius: 50%; filter: blur(120px); 
-            opacity: 0.4; animation: pulseOrb 15s infinite alternate ease-in-out;
+            opacity: 0.35; animation: pulseOrb 15s infinite alternate ease-in-out;
         }
         .orb-1 { width: 80vw; height: 80vw; background: #1a237e; top: 10%; left: 5%; }
         .orb-2 { width: 70vw; height: 70vw; background: #4a148c; bottom: 5%; right: 5%; animation-delay: -5s; }
         .orb-3 { width: 60vw; height: 60vw; background: #bf360c; top: 30%; left: 40%; animation-delay: -10s; }
         @keyframes pulseOrb { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
 
-        /* --- THE GLASS CALCULATOR (ULTRA-SMOOTH) --- */
+        /* Noise Texture overlay */
+        body::after {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
+            opacity: 0.02; pointer-events: none; z-index: 100;
+        }
+
+        /* --- THE GLASS CALCULATOR --- */
         #calc-container {
             background: var(--glass-bg);
             backdrop-filter: blur(80px) saturate(180%);
@@ -56,7 +63,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 50px 100px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1);
             width: 380px; z-index: 10;
-            transition: transform 0.15s ease-out, opacity 0.8s ease, backdrop-filter 0.3s ease;
+            transition: transform 0.15s ease-out, opacity 0.8s ease;
             transform-style: preserve-3d;
         }
 
@@ -82,13 +89,12 @@
             background: rgba(255, 255, 255, 0.05); color: #fff;
             box-shadow: 0 8px 15px rgba(0,0,0,0.3);
         }
-
         button:active { transform: scale(0.88) translateY(4px); background: rgba(255, 255, 255, 0.12); }
         .func { background: rgba(255, 255, 255, 0.12); font-weight: 600; }
         .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; box-shadow: 0 10px 25px rgba(255, 159, 10, 0.3); }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 32px; border-radius: 40px; }
 
-        /* --- THE CINEMATIC VOID --- */
+        /* --- CINEMATIC VOID --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(50px);
@@ -102,21 +108,31 @@
 
         #zoom-wrapper { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 80px; }
         
+        /* THE GLOWING TEXT ENGINE */
         #void-text {
             font-family: 'Playfair Display', serif;
-            font-size: 3.2rem; font-style: italic; font-weight: 700; 
+            font-size: 3.4rem; font-style: italic; font-weight: 700; 
             text-align: center; width: 90%; opacity: 0; line-height: 1.2;
-            background: linear-gradient(to right, #fff, #aaa, #fff);
-            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shineText 4s linear infinite;
+            color: #fff;
+            text-shadow: var(--glow-white); /* Core White Glow */
+            animation: breatheGlow 3s ease-in-out infinite;
         }
-        @keyframes shineText { to { background-position: 200% center; } }
 
-        /* --- LYRIC ANIMATIONS --- */
+        @keyframes breatheGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .red-text { 
+            color: #ff3b30 !important; 
+            text-shadow: var(--glow-red) !important; /* Intense Red Glow */
+        }
+
+        /* ANIMATIONS */
         .zoom-absolute { animation: zoomAbsolute 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes zoomAbsolute {
             0% { transform: scale(0); opacity: 0; filter: blur(40px); }
-            45% { transform: scale(1.4); opacity: 1; filter: blur(0px); }
+            45% { transform: scale(1.45); opacity: 1; filter: blur(0px); }
             100% { transform: scale(1); opacity: 1; }
         }
 
@@ -146,11 +162,11 @@
         }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
         
-        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
+        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
         .track-artist { font-family: 'Montserrat', sans-serif; color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px; margin-top: 4px; }
 
         .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 10px; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 2px; box-shadow: 0 0 15px #fff; }
+        .progress-fill { width: 0%; height: 100%; background: #fff; border-radius: 2px; box-shadow: 0 0 20px #fff; }
         .time-row { font-family: 'Montserrat', sans-serif; display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); font-weight: 600; margin-top: 8px; }
 
         #signature { 
@@ -158,8 +174,6 @@
             font-family: 'Syncopate', sans-serif; font-size: 0.65rem; 
             letter-spacing: 8px; text-transform: uppercase;
         }
-        
-        .red-text { color: #ff3b30 !important; text-shadow: 0 0 30px rgba(255, 59, 48, 0.6); }
 
         @media (max-width: 400px) {
             #calc-container { border-radius: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; background: transparent; border: none; padding-bottom: 80px; }
@@ -225,17 +239,13 @@
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => { if (e.key === 'F12' || (e.ctrlKey && (e.key === 'u' || e.key === 's'))) e.preventDefault(); });
 
-        // --- ENHANCED 3D TILT WITH DYNAMIC BLUR ---
+        // --- ENHANCED 3D TILT ---
         const card = document.getElementById('calc-container');
         document.addEventListener('mousemove', (e) => {
             if (isTransitioning) return;
             const x = (window.innerWidth / 2 - e.pageX) / 40;
             const y = (window.innerHeight / 2 - e.pageY) / 40;
             card.style.transform = `rotateY(${-x}deg) rotateX(${y}deg) translateZ(20px)`;
-            
-            // Dynamic blur based on tilt angle
-            const blurAmount = 80 + Math.abs(x) + Math.abs(y);
-            card.style.backdropFilter = `blur(${blurAmount}px) saturate(180%)`;
         });
 
         const display = document.getElementById('display');
@@ -320,8 +330,6 @@
                 setTimeout(() => {
                     card.style.display = "none";
                     overlay.style.display = "flex";
-                    
-                    // INTRO ZOOM
                     textField.innerHTML = "Nagkamali ba ako?";
                     textField.className = "zoom-absolute"; 
 
@@ -330,7 +338,6 @@
                         document.getElementById('music-gui').style.transform = "translateY(-10px)";
                     }, 500);
 
-                    // START LYRICS AFTER ZOOM
                     setTimeout(() => { 
                         currentStep = 0;
                         runLyrics(); 
@@ -342,35 +349,25 @@
         function runLyrics() {
             if (currentStep < lyricsData.length) {
                 const currentLyric = lyricsData[currentStep];
-                
-                // 1. Force state reset
                 textField.className = "";
-                void textField.offsetWidth; // Force Reflow
+                void textField.offsetWidth; // Refresh logic
                 
-                // 2. Load text and start fade-in
                 textField.innerHTML = currentLyric.text;
                 textField.className = "lyric-in"; 
                 
-                // 3. Wait for line to finish
                 setTimeout(() => {
-                    textField.className = "lyric-out"; // Fade out
-
-                    // 4. Wait for fade-out to end, then load next
+                    textField.className = "lyric-out";
                     setTimeout(() => {
                         currentStep++;
                         runLyrics();
                     }, 800); 
                 }, currentLyric.duration); 
             } else {
-                showFinalPakak();
+                textField.innerHTML = "";
+                void textField.offsetWidth;
+                textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
+                textField.className = "zoom-absolute";
             }
-        }
-
-        function showFinalPakak() {
-            textField.innerHTML = "";
-            void textField.offsetWidth;
-            textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
-            textField.className = "zoom-absolute";
         }
     </script>
 </body>
