@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-14V4SBDZB2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-14V4SBDZB2');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mathematics Online Module</title>
+    <title>Calculator Pro</title>
     
-    <meta property="og:title" content="Mathematics Online Module">
-    <meta property="og:description" content="JEC Enrollment Portal - Student Assessment Tool v4.0">
+    <meta property="og:title" content="Calculator Pro">
+    <meta property="og:description" content="A simple, premium web calculator.">
     <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg">
     <meta name="theme-color" id="theme-meta" content="#0d0d0d">
 
@@ -27,39 +35,25 @@
             display: flex; justify-content: center; align-items: center; 
             overflow: hidden; user-select: none; perspective: 1500px; 
             font-family: 'Montserrat', sans-serif;
-            transition: background 1s ease;
+            transition: background 1s ease, filter 0.1s ease;
         }
 
-        /* --- SYSTEM GLITCH --- */
-        .glitch-shake {
-            animation: shake 0.12s infinite;
-            filter: hue-rotate(110deg) contrast(250%) brightness(1.8);
-        }
-        @keyframes shake {
-            0% { transform: translate(4px, 2px); }
-            25% { transform: translate(-3px, -4px); }
-            50% { transform: translate(5px, -2px); }
-            75% { transform: translate(-4px, 5px); }
-            100% { transform: translate(2px, -3px); }
+        /* --- THE INVERSION GLITCH --- */
+        .invert-glitch {
+            filter: invert(1) contrast(2) !important;
+            animation: shake 0.1s infinite;
         }
 
-        /* --- WATCHDOG SCREEN --- */
-        #system-locked {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #ff0000; color: #fff; z-index: 10000;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            font-family: 'Syncopate', sans-serif; text-align: center; padding: 20px;
-        }
+        /* --- UI OVERLAYS --- */
+        #top-info { position: absolute; top: 20px; width: 90%; display: flex; justify-content: space-between; font-size: 0.55rem; color: rgba(255,255,255,0.3); font-family: 'Syncopate'; letter-spacing: 2px; }
 
-        /* --- DYNAMIC BACKGROUND --- */
         .bg-mesh { position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; z-index: -1; animation: spin 60s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.35; }
         .orb-1 { width: 90vw; height: 90vw; background: #1a237e; top: 10%; left: 5%; }
         .orb-2 { width: 80vw; height: 80vw; background: #4a148c; bottom: 5%; right: 5%; }
-        .orb-3 { width: 70vw; height: 70vw; background: #bf360c; top: 35%; left: 35%; }
+        .orb-3 { width: 70vw; height: 70vw; background: #bf360c; top: 35%; left: 40%; }
 
-        /* --- TITAN CALCULATOR GUI --- */
         #calc-container {
             background: var(--glass); backdrop-filter: blur(60px) saturate(180%);
             -webkit-backdrop-filter: blur(60px) saturate(180%);
@@ -70,92 +64,43 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
         }
 
-        #display {
-            width: 100%; height: 120px; color: #fff; text-align: right;
-            padding: 0 15px; margin-bottom: 30px;
-            display: flex; align-items: flex-end; justify-content: flex-end;
-            font-size: clamp(3rem, 15vw, 5.5rem); font-weight: 100;
-            letter-spacing: -4px; white-space: nowrap; overflow: hidden;
-        }
-
+        #display { width: 100%; height: 110px; color: #fff; text-align: right; padding: 0 15px; margin-bottom: 25px; display: flex; align-items: flex-end; justify-content: flex-end; font-size: clamp(2.8rem, 15vw, 5.2rem); font-weight: 100; letter-spacing: -4px; white-space: nowrap; overflow: hidden; }
         .button-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        button {
-            border: none; height: clamp(65px, 16vw, 75px); width: 100%; 
-            border-radius: 50%; font-size: 1.8rem; font-weight: 300; 
-            cursor: pointer; transition: 0.2s;
-            display: flex; justify-content: center; align-items: center; 
-            background: rgba(255, 255, 255, 0.08); color: #fff;
-        }
-
-        button:active { transform: scale(0.85) translateY(5px); background: rgba(255, 255, 255, 0.2); }
-        .func { background: rgba(255, 255, 255, 0.15); font-weight: 600; font-size: 1.3rem; }
+        button { border: none; height: clamp(62px, 16vw, 75px); width: 100%; border-radius: 50%; font-size: 1.8rem; font-weight: 300; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; background: rgba(255, 255, 255, 0.08); color: #fff; }
+        button:active { transform: scale(0.85); background: rgba(255, 255, 255, 0.15); }
+        .func { background: rgba(255, 255, 255, 0.15); font-weight: 600; font-size: 1.2rem; }
         .op { background: linear-gradient(145deg, #ff9f0a, #e68a00); font-weight: 600; }
         .oval { grid-column: span 2; justify-content: flex-start; padding-left: 35px; border-radius: 40px; }
 
-        /* --- CENTERING ENGINE --- */
-        #void-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: #000; display: none; z-index: 999;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
-        
+        #void-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; display: none; z-index: 999; flex-direction: column; justify-content: center; align-items: center; }
         #bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; filter: blur(45px) brightness(0.2); opacity: 0; transition: 3s ease; }
-        
-        #zoom-wrapper { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center; 
-            z-index: 1000; pointer-events: none;
-        }
-        
-        #void-text {
-            font-family: 'Playfair Display', serif; 
-            font-size: clamp(2.4rem, 11vw, 4.2rem); 
-            font-style: italic; font-weight: 700; 
-            text-align: center; width: 90%;
-            opacity: 0; line-height: 1.1; color: #fff; 
-            text-shadow: var(--glow-white);
-        }
+        #zoom-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; pointer-events: none; }
+        #void-text { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 11vw, 4.2rem); font-style: italic; font-weight: 700; text-align: center; width: 90%; opacity: 0; line-height: 1.1; color: #fff; text-shadow: var(--glow-white); }
         .red-text { color: #ff3b30 !important; text-shadow: var(--glow-red) !important; }
 
-        /* --- ANIMATIONS --- */
-        .zoom-absolute { animation: zoomImpact 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes zoomImpact { 
-            0% { transform: scale(0.05); opacity: 0; filter: blur(50px); } 
-            40% { transform: scale(1.25); opacity: 1; filter: blur(0px); } 
-            100% { transform: scale(1); opacity: 1; } 
-        }
-        
-        .lyric-in { animation: lyricFadeIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
-        @keyframes lyricFadeIn { 
-            0% { transform: scale(0.9) translateY(20px); opacity: 0; filter: blur(20px); } 
-            100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); } 
-        }
-        
-        .lyric-out { animation: lyricFadeOut 0.9s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
-        @keyframes lyricFadeOut { 
-            0% { transform: scale(1); opacity: 1; filter: blur(0px); } 
-            100% { transform: scale(1.1); opacity: 0; filter: blur(30px); } 
-        }
-
-        /* --- PLAYER GUI --- */
         #music-gui { position: absolute; bottom: 8%; width: 85%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: 3s ease; left: 50%; transform: translateX(-50%); }
-        .gui-header { display: flex; align-items: center; gap: 18px; }
         .album-art { width: 65px; height: 65px; border-radius: 50%; background: url('https://upload.wikimedia.org/wikipedia/en/3/36/December_Avenue_-_December_Avenue.jpg') center/cover; border: 2px solid rgba(255,255,255,0.15); animation: spinArt 10s linear infinite; }
         @keyframes spinArt { 100% { transform: rotate(360deg); } }
-        .track-title { font-family: 'Syncopate', sans-serif; color: #fff; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
-        .track-artist { font-family: 'Montserrat', sans-serif; color: rgba(255,255,255,0.4); font-size: 0.8rem; margin-top: 4px; }
         .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
         .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 15px #fff; }
+        
+        #console-log { position: absolute; bottom: 20px; width: 100%; text-align: center; color: rgba(255,255,255,0.2); font-size: 0.55rem; letter-spacing: 2px; font-family: 'Syncopate'; }
+        #signature { position: absolute; top: 50px; width: 100%; text-align: center; color: rgba(255,255,255,0.1); font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 10px; }
 
-        #signature { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.1); font-family: 'Syncopate', sans-serif; font-size: 0.6rem; letter-spacing: 10px; text-transform: uppercase; width: 100%; text-align: center; }
+        @keyframes shake { 0% { transform: translate(4px, 2px); } 50% { transform: translate(-3px, -2px); } 100% { transform: translate(2px, -3px); } }
+        .zoom-absolute { animation: zoomImpact 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes zoomImpact { 0% { transform: scale(0.05); opacity: 0; filter: blur(50px); } 40% { transform: scale(1.25); opacity: 1; filter: blur(0px); } 100% { transform: scale(1); opacity: 1; } }
+        .lyric-in { animation: lyricFadeIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards !important; }
+        @keyframes lyricFadeIn { 0% { transform: scale(0.9) translateY(20px); opacity: 0; filter: blur(20px); } 100% { transform: scale(1) translateY(0); opacity: 1; filter: blur(0px); } }
+        .lyric-out { animation: lyricFadeOut 0.9s cubic-bezier(0.7, 0, 0.84, 0) forwards !important; }
+        @keyframes lyricFadeOut { 0% { transform: scale(1); opacity: 1; filter: blur(0px); } 100% { transform: scale(1.1); opacity: 0; filter: blur(30px); } }
     </style>
 </head>
-<body onclick="masterLockdown()">
+<body>
 
-    <div id="system-locked">
-        <h1 style="font-size: 3.5rem; margin-bottom: 20px;">SYSTEM LOCKED</h1>
-        <p style="letter-spacing: 8px; font-weight: 100;">UNAUTHORIZED ESCAPE DETECTED</p>
-        <button onclick="location.reload()" style="margin-top:50px; padding:20px 50px; background:#fff; color:#f00; border:none; font-weight:bold; border-radius:50px; cursor:pointer; font-family:'Montserrat';">RE-AUTHENTICATE SESSION</button>
+    <div id="top-info">
+        <div>PRO MODE v.402</div>
+        <div id="sys-load">LOAD: 4%</div>
     </div>
 
     <div class="bg-mesh">
@@ -189,14 +134,16 @@
         </div>
     </div>
 
+    <div id="console-log">ENCRYPTED SESSION ACTIVE</div>
+
     <div id="void-overlay">
         <video id="bg-video" loop playsinline muted><source src="video.mp4" type="video/mp4"></video>
         <div id="signature">MADE BY MATT AT JEC</div>
         <div id="zoom-wrapper"><div id="void-text"></div></div>
         <div id="music-gui">
-            <div class="gui-header">
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
                 <div class="album-art"></div> 
-                <div class="track-details"><div class="track-title">Bulong</div><div class="track-artist">December Avenue</div></div>
+                <div class="track-details"><div style="color:#fff; font-size:0.8rem; letter-spacing:2px; font-family:'Syncopate';">Bulong</div><div style="color:rgba(255,255,255,0.4); font-size:0.8rem;">December Avenue</div></div>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
         </div>
@@ -207,26 +154,13 @@
         let isTransitioning = false;
         let currentStep = 0;
 
-        // --- THE WATCHDOG (ESC DETECTOR) ---
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && isTransitioning) {
-                document.getElementById('system-locked').style.display = 'flex';
-                if (navigator.vibrate) navigator.vibrate([600, 100, 600]);
-            }
-        });
-
-        // --- HARDWARE LOCK ---
         async function masterLockdown() {
             const el = document.documentElement;
             const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
             if (rfs) rfs.call(el).catch(()=>{});
-            
-            if ('keyboard' in navigator && 'lock' in navigator.keyboard) {
-                await navigator.keyboard.lock(["Escape", "F11", "F12"]).catch(()=>{});
-            }
+            if ('keyboard' in navigator && 'lock' in navigator.keyboard) { await navigator.keyboard.lock(["Escape", "F11", "F12"]).catch(()=>{}); }
         }
 
-        // --- SECURITY ---
         document.addEventListener('keydown', e => {
             const forbidden = ['f12', 'u', 's', 'i', 'j', 'c'];
             if (e.key === 'F12' || ((e.ctrlKey || e.metaKey) && forbidden.includes(e.key.toLowerCase()))) e.preventDefault();
@@ -234,18 +168,28 @@
         });
         document.addEventListener('contextmenu', e => e.preventDefault());
 
-        // --- EXIT BLOCK ---
-        window.onbeforeunload = function() { if(isTransitioning) return "Session Locked."; };
+        window.onbeforeunload = function() { if(isTransitioning) return "Locked."; };
         window.history.pushState(null, "", window.location.href);
         window.onpopstate = function() { window.history.go(1); };
 
         function btnPress(key) {
             tick.currentTime = 0; tick.play();
-            if (navigator.vibrate) navigator.vibrate(25);
+            // PREMIUM HAPTIC HEARTBEAT
+            if (navigator.vibrate) {
+                if (['+','-','*','/'].includes(key)) navigator.vibrate([15, 30, 15]);
+                else navigator.vibrate(20);
+            }
             masterLockdown();
             if (key === 'AC') clearDisplay();
             else appendNum(key);
+            
+            // DYNAMIC LOAD
+            let load = Math.floor(Math.random() * 5) + 3;
+            document.getElementById('sys-load').innerText = `LOAD: ${load}%`;
+            updateConsole(`SECURE_PKT: 0x${Math.floor(Math.random()*16777215).toString(16).toUpperCase()}`);
         }
+
+        function updateConsole(msg) { document.getElementById('console-log').innerText = msg; }
 
         const display = document.getElementById('display');
         const card = document.getElementById('calc-container');
@@ -267,13 +211,10 @@
             { text: "<span class='red-text'>Ng mga bituin</span>", duration: 5000 }
         ];
 
-        bgMusic.addEventListener('timeupdate', () => {
-            if (!bgMusic.duration) return;
-            progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%';
-        });
+        bgMusic.addEventListener('timeupdate', () => { if (!bgMusic.duration) return; progressFill.style.width = (bgMusic.currentTime / bgMusic.duration * 100) + '%'; });
 
         function appendNum(n) {
-            if (["Error", "Locked.", "Nagkamali ba ako?"].includes(display.innerText)) display.innerText = "";
+            if (["Error", "Nagkamali ba ako?"].includes(display.innerText)) display.innerText = "";
             if (display.innerText === "0" && n !== ".") display.innerText = n;
             else display.innerText += n;
         }
@@ -285,40 +226,48 @@
             try { eval(display.innerText.replace(/÷/g, '/').replace(/×/g, '*')); } catch { display.innerText = "Error"; return; }
 
             isTransitioning = true;
-            document.body.classList.add('glitch-shake');
-            document.getElementById('theme-meta').setAttribute('content', '#ff3b30');
+            
+            // SUDDEN SYSTEM LOAD SPIKE
+            document.getElementById('sys-load').innerText = "LOAD: 99%";
+            document.getElementById('sys-load').style.color = "#ff3b30";
 
             setTimeout(() => {
-                document.body.classList.remove('glitch-shake');
-                display.innerText = "Nagkamali ba ako?";
-                document.title = "🎵 SYSTEM ALERT: Bulong 🎵"; 
-
-                overlay.style.display = "flex";
-                setTimeout(() => { 
-                    bgVideo.style.opacity = "1";
-                    bgVideo.play();
-                    bgMusic.currentTime = 183.8; bgMusic.volume = 0; bgMusic.play();
-                    let v = 0; const fIn = setInterval(() => { if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } else clearInterval(fIn); }, 50);
-                }, 100);
-
-                card.style.transform = "scale(0) rotateZ(360deg) blur(50px)";
-                card.style.opacity = "0";
+                // THE INVERSION GLITCH
+                document.body.classList.add('invert-glitch');
+                document.getElementById('theme-meta').setAttribute('content', '#ff3b30');
+                updateConsole("CRITICAL_CORE_FAILURE");
+                gtag('event', 'trap_triggered');
 
                 setTimeout(() => {
-                    card.style.display = "none";
-                    textField.innerHTML = "Nagkamali ba ako?";
-                    textField.className = "zoom-absolute"; 
-                    setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 1000);
-                    setTimeout(() => { runLyrics(); }, 2400); 
-                }, 1000);
+                    document.body.classList.remove('invert-glitch');
+                    display.innerText = "Nagkamali ba ako?";
+                    document.title = "🎵 Now Playing: Bulong 🎵"; 
+
+                    overlay.style.display = "flex";
+                    setTimeout(() => { 
+                        bgVideo.style.opacity = "1"; bgVideo.play();
+                        bgMusic.currentTime = 183.8; bgMusic.volume = 0; bgMusic.play();
+                        let v = 0; const fIn = setInterval(() => { if (v < 1) { v += 0.1; bgMusic.volume = Math.min(v, 1); } else clearInterval(fIn); }, 50);
+                    }, 100);
+
+                    card.style.transform = "scale(0) rotateZ(360deg) blur(50px)";
+                    card.style.opacity = "0";
+
+                    setTimeout(() => {
+                        card.style.display = "none";
+                        textField.innerHTML = "Nagkamali ba ako?";
+                        textField.className = "zoom-absolute"; 
+                        setTimeout(() => { document.getElementById('music-gui').style.opacity = "1"; }, 1000);
+                        setTimeout(() => { runLyrics(); }, 2400); 
+                    }, 1000);
+                }, 400);
             }, 500);
         }
 
         function runLyrics() {
             if (currentStep < lyricsData.length) {
                 const currentLyric = lyricsData[currentStep];
-                textField.className = "";
-                void textField.offsetWidth;
+                textField.className = ""; void textField.offsetWidth;
                 textField.innerHTML = currentLyric.text;
                 textField.className = "lyric-in"; 
                 setTimeout(() => {
@@ -328,16 +277,21 @@
             } else {
                 textField.innerHTML = "<span class='red-text'>Aray mo Pakak!</span>";
                 textField.className = "zoom-absolute";
+                gtag('event', 'song_finished');
+                
                 setTimeout(() => {
-                    textField.style.opacity = "0";
-                    document.getElementById('music-gui').style.opacity = "0";
+                    textField.style.opacity = "0"; 
+                    document.getElementById('music-gui').style.opacity = "0"; 
                     bgVideo.style.opacity = "0";
                     document.getElementById('theme-meta').setAttribute('content', '#000000');
-                    setTimeout(() => {
-                        window.onbeforeunload = null;
-                        document.title = "Mathematics Online Module";
+                    updateConsole("SESSION_LOCKED: RECOVERY_IN_300S");
+
+                    setTimeout(() => { 
+                        isTransitioning = false;
+                        window.onbeforeunload = null; 
                         if (document.exitFullscreen) document.exitFullscreen();
-                    }, 5000);
+                        location.reload(); 
+                    }, 300000); 
                 }, 4000);
             }
         }
