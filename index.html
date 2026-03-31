@@ -7,28 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
+            -webkit-tap-highlight-color: transparent; outline: none;
         }
 
         body {
-            background-color: #050505;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            user-select: none;
+            background-color: #050505; height: 100vh; display: flex;
+            justify-content: center; align-items: center; overflow: hidden; user-select: none;
         }
 
         /* --- ROTATING DYNAMIC BACKGROUND MESH --- */
         .bg-mesh {
-            position: fixed;
-            top: -50vh; left: -50vw; width: 200vw; height: 200vh;
+            position: fixed; top: -50vh; left: -50vw; width: 200vw; height: 200vh;
             z-index: -1; background: #050505; overflow: hidden;
             animation: spinMesh 40s linear infinite;
         }
@@ -72,17 +63,24 @@
         .op:active { background: #d98505; box-shadow: 0 4px 10px rgba(255, 159, 10, 0.2); }
         .oval { grid-column: span 2; width: 100%; border-radius: 36px; justify-content: flex-start; padding-left: 28px; }
 
-        /* --- CINEMATIC MUSIC OVERLAY WITH BLURRED VIDEO --- */
+        /* --- CINEMATIC MUSIC OVERLAY --- */
         #void-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); display: none; flex-direction: column;
             justify-content: center; align-items: center; z-index: 999;
         }
 
-        #bg-video {
+        /* NEW: YouTube IFrame Wrapper */
+        #yt-wrapper {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; 
+            z-index: -1; pointer-events: none; overflow: hidden;
             filter: blur(15px) brightness(0.4); 
+        }
+
+        /* Scales the YouTube video up to cover the screen like object-fit: cover */
+        #yt-player {
+            width: 300vw; height: 300vh; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
 
         .no-click { pointer-events: none; }
@@ -93,7 +91,7 @@
             line-height: 1.4; color: #ffffff; display: inline-block; letter-spacing: -0.5px;
         }
 
-        /* --- MUSIC PLAYER GUI WITH TIMESTAMPS --- */
+        /* --- MUSIC PLAYER GUI --- */
         #music-gui {
             position: absolute; bottom: 40px; width: 85%; max-width: 400px;
             display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 2s ease; z-index: 2;
@@ -119,11 +117,9 @@
         .track-artist { color: #a0a0ab; font-size: 0.9rem; font-weight: 400; }
 
         .progress-container { width: 100%; display: flex; flex-direction: column; gap: 6px; }
-        
         .time-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: #a0a0ab; font-weight: 500; }
-        
         .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .progress-fill { width: 0%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); transition: width 0.3s linear;}
         
         #creator-name { 
             position: absolute; top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 0.9rem; 
@@ -187,9 +183,9 @@
     </div>
 
     <div id="void-overlay">
-        <video id="bg-media" loop playsinline>
-            <source src="video.mp4" type="video/mp4">
-        </video>
+        <div id="yt-wrapper">
+            <div id="yt-player"></div>
+        </div>
 
         <div id="creator-name">MADE BY MATT AT JEC</div>
         
@@ -217,6 +213,8 @@
         </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
         // --- SECURITY WALL ---
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -231,13 +229,28 @@
             }
         });
 
+        // --- YOUTUBE API SETUP ---
+        let player;
+        
+        // ADJUST THIS NUMBER: If the song starts too early, increase this to fast-forward into the song!
+        const startSeconds = 0; 
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                videoId: 'YFB_Lz7grkc', // Your specific YouTube video ID
+                playerVars: {
+                    'autoplay': 0, 'controls': 0, 'disablekb': 1, 'fs': 0, 
+                    'modestbranding': 1, 'playsinline': 1, 'rel': 0, 'showinfo': 0
+                }
+            });
+        }
+
         const display = document.getElementById('display');
         const calcContainer = document.getElementById('calc-container');
         const overlay = document.getElementById('void-overlay');
         const textField = document.getElementById('void-text');
         const zoomWrapper = document.getElementById('zoom-wrapper');
         
-        const bgMedia = document.getElementById('bg-media'); 
         const progressFill = document.getElementById('progress-fill');
         const currentTimeEl = document.getElementById('current-time');
         const remainingTimeEl = document.getElementById('remaining-time');
@@ -265,16 +278,20 @@
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // GUI Timestamps reading directly from the video file
-        bgMedia.addEventListener('timeupdate', () => {
-            if (bgMedia.duration) {
-                const current = bgMedia.currentTime;
-                const duration = bgMedia.duration;
-                progressFill.style.width = ((current / duration) * 100) + '%';
-                currentTimeEl.innerText = formatTime(current);
-                remainingTimeEl.innerText = "-" + formatTime(duration - current);
+        // Continually check the YouTube player's time to update the progress bar
+        setInterval(() => {
+            if (player && player.getPlayerState && player.getPlayerState() === 1) { // 1 = Playing
+                const current = player.getCurrentTime();
+                const duration = player.getDuration();
+                
+                if (duration > 0) {
+                    const progress = (current / duration) * 100;
+                    progressFill.style.width = progress + '%';
+                    currentTimeEl.innerText = formatTime(current);
+                    remainingTimeEl.innerText = "-" + formatTime(duration - current);
+                }
             }
-        });
+        }, 500);
 
         function updateFontSize() {
             if (isTransitioning) return;
@@ -314,7 +331,7 @@
             let userInput = display.innerText.replace(/\s/g, ''); 
             let isValid = false;
 
-            // First, make sure they actually typed a valid math equation
+            // Make sure they actually typed a valid math equation
             try {
                 if (!userInput || userInput === "0") throw new Error("Empty");
                 let result = eval(userInput);
@@ -333,7 +350,7 @@
                 return; 
             }
 
-            // --- THE TRAP: Triggered by ANY valid math equation ---
+            // --- THE TRAP TRIGGER ---
             isTransitioning = true;
             display.innerText = "Calculating...";
             display.style.fontSize = "2.8rem"; 
@@ -346,19 +363,23 @@
                 display.style.fontWeight = "400";
                 display.style.color = "#ff3b30";
 
-                // Play Video/Audio combined
-                bgMedia.volume = 0;
-                bgMedia.currentTime = 0;
-                
-                bgMedia.play().then(() => {
+                // Start YouTube Video
+                if (player && player.playVideo) {
+                    player.seekTo(startSeconds);
+                    player.setVolume(0); // Start at 0 volume for fade effect
+                    player.playVideo();
+
+                    // Smooth volume fade-in
                     let vol = 0;
                     const fadeInInterval = setInterval(() => {
-                        if (vol < 1) {
-                            vol += 0.05; 
-                            bgMedia.volume = Math.min(vol, 1);
-                        } else clearInterval(fadeInInterval);
+                        if (vol < 100) {
+                            vol += 5; 
+                            player.setVolume(vol);
+                        } else {
+                            clearInterval(fadeInInterval);
+                        }
                     }, 50); 
-                }).catch(e => console.log("Autoplay blocked by browser."));
+                }
 
                 calcContainer.style.transform = 'scale(0.9) translateY(50px)';
                 calcContainer.style.opacity = '0';
